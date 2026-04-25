@@ -19,7 +19,6 @@ AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. li
 DISPLAY_SLEEP_MIN="${DISPLAY_SLEEP_MIN:-10}"  # blank the display after N minutes on AC (0 = never)
 LOCK_ON_SLEEP="${LOCK_ON_SLEEP:-1}"           # 1 = require password as soon as display sleeps
 INSTALL_GUI="${INSTALL_GUI:-1}"               # 1 = also install the Ollama menu-bar GUI app (cask)
-PERSIST_ENV="${PERSIST_ENV:-1}"               # 1 = install a LaunchAgent so env survives reboots
 EXCLUDE_BACKUPS="${EXCLUDE_BACKUPS:-1}"       # 1 = skip Time Machine + Spotlight on ~/.ollama/models
 INSTALL_HEALTHCHECK="${INSTALL_HEALTHCHECK:-1}"  # 1 = LaunchAgent that probes /api/tags every 60s
 INSTALL_AUTOUPDATE="${INSTALL_AUTOUPDATE:-1}"    # 1 = enable macOS auto security updates + weekly brew upgrade
@@ -58,44 +57,42 @@ else
 fi
 
 bold "3/6  Configuring Ollama (bind=$OLLAMA_BIND keep_alive=$OLLAMA_KEEP_ALIVE_VAL max_loaded=$OLLAMA_MAX_LOADED)"
-current_host="$(launchctl getenv OLLAMA_HOST 2>/dev/null || true)"
-current_keepalive="$(launchctl getenv OLLAMA_KEEP_ALIVE 2>/dev/null || true)"
-current_max="$(launchctl getenv OLLAMA_MAX_LOADED_MODELS 2>/dev/null || true)"
-service_started=0
+
+OLLAMA_BIN="$(brew --prefix)/bin/ollama"
+if [[ ! -x "$OLLAMA_BIN" ]]; then
+  echo "  ! ollama binary not found at $OLLAMA_BIN" >&2
+  exit 1
+fi
+
+# Stop brew's ollama service so it doesn't compete with our LaunchAgent.
+# We manage ollama ourselves so env vars are baked into the plist (no
+# launchctl-setenv race that left OLLAMA_KEEP_ALIVE / OLLAMA_MAX_LOADED_MODELS
+# unset for ollama after a reboot).
 if brew services list 2>/dev/null | awk '$1=="ollama"{print $2}' | grep -q started; then
-  service_started=1
+  brew services stop ollama >/dev/null
+  info "stopped brew's ollama service (replaced with com.user.ollama)"
 fi
-if [[ "$current_host" == "$OLLAMA_BIND" \
-   && "$current_keepalive" == "$OLLAMA_KEEP_ALIVE_VAL" \
-   && "$current_max" == "$OLLAMA_MAX_LOADED" \
-   && "$service_started" == "1" ]]; then
-  info "already configured and running"
-else
-  launchctl setenv OLLAMA_HOST "$OLLAMA_BIND"
-  launchctl setenv OLLAMA_KEEP_ALIVE "$OLLAMA_KEEP_ALIVE_VAL"
-  launchctl setenv OLLAMA_MAX_LOADED_MODELS "$OLLAMA_MAX_LOADED"
-  if [[ "$service_started" == "1" ]]; then
-    brew services restart ollama >/dev/null
-  else
-    brew services start ollama >/dev/null
-  fi
-  info "ollama service (re)started"
+launchctl bootout "gui/$(id -u)/homebrew.mxcl.ollama" 2>/dev/null || true
+
+# Clean up the previous PERSIST_ENV launchagent and the launchd-domain env
+# vars; both are obsolete now that env is baked into our plist.
+LEGACY_PLIST="$HOME/Library/LaunchAgents/com.user.ollama-env.plist"
+if [[ -f "$LEGACY_PLIST" ]]; then
+  launchctl unload "$LEGACY_PLIST" 2>/dev/null || true
+  rm -f "$LEGACY_PLIST"
+  info "removed legacy launchagent com.user.ollama-env"
 fi
+launchctl unsetenv OLLAMA_HOST 2>/dev/null || true
+launchctl unsetenv OLLAMA_KEEP_ALIVE 2>/dev/null || true
+launchctl unsetenv OLLAMA_MAX_LOADED_MODELS 2>/dev/null || true
 
-# Force CLI calls in *this* script to connect via loopback. Without this, a
-# shell that inherited OLLAMA_HOST=0.0.0.0:port from a prior launchctl setenv
-# would try to connect to 0.0.0.0 and fail.
-OLLAMA_PORT="${OLLAMA_BIND##*:}"
-export OLLAMA_HOST="127.0.0.1:${OLLAMA_PORT}"
-
-# launchctl setenv is per-launchd-session, so without a LaunchAgent the
-# env resets on reboot. This agent re-applies the values at login and
-# kickstarts the brew-managed ollama service to pick them up.
-if [[ "$PERSIST_ENV" == "1" ]]; then
-  PLIST_LABEL="com.user.ollama-env"
-  PLIST_PATH="$HOME/Library/LaunchAgents/${PLIST_LABEL}.plist"
-  TMP_PLIST="$(mktemp -t ollama-env-plist)"
-  cat >"$TMP_PLIST" <<PLIST
+# Install our LaunchAgent with env vars baked in via EnvironmentVariables.
+# launchd spawns ollama with these vars set every time, no race possible.
+PLIST_LABEL="com.user.ollama"
+PLIST_PATH="$HOME/Library/LaunchAgents/${PLIST_LABEL}.plist"
+LOG_PATH="$HOME/Library/Logs/ollama.log"
+TMP_PLIST="$(mktemp -t ollama-plist)"
+cat >"$TMP_PLIST" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -104,32 +101,49 @@ if [[ "$PERSIST_ENV" == "1" ]]; then
   <string>${PLIST_LABEL}</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/bin/sh</string>
-    <string>-c</string>
-    <string>launchctl setenv OLLAMA_HOST "${OLLAMA_BIND}"; launchctl setenv OLLAMA_KEEP_ALIVE "${OLLAMA_KEEP_ALIVE_VAL}"; launchctl setenv OLLAMA_MAX_LOADED_MODELS "${OLLAMA_MAX_LOADED}"; launchctl kickstart -k "gui/\$(id -u)/homebrew.mxcl.ollama" 2>/dev/null || true</string>
+    <string>${OLLAMA_BIN}</string>
+    <string>serve</string>
   </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>OLLAMA_HOST</key>
+    <string>${OLLAMA_BIND}</string>
+    <key>OLLAMA_KEEP_ALIVE</key>
+    <string>${OLLAMA_KEEP_ALIVE_VAL}</string>
+    <key>OLLAMA_MAX_LOADED_MODELS</key>
+    <string>${OLLAMA_MAX_LOADED}</string>
+  </dict>
   <key>RunAtLoad</key>
   <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>${LOG_PATH}</string>
+  <key>StandardErrorPath</key>
+  <string>${LOG_PATH}</string>
 </dict>
 </plist>
 PLIST
-  mkdir -p "$(dirname "$PLIST_PATH")"
-  if [[ -f "$PLIST_PATH" ]] && cmp -s "$TMP_PLIST" "$PLIST_PATH"; then
-    info "launchagent ${PLIST_LABEL} already current"
-    rm -f "$TMP_PLIST"
-  else
-    mv "$TMP_PLIST" "$PLIST_PATH"
-    launchctl unload "$PLIST_PATH" 2>/dev/null || true
+mkdir -p "$(dirname "$PLIST_PATH")" "$(dirname "$LOG_PATH")"
+if [[ -f "$PLIST_PATH" ]] && cmp -s "$TMP_PLIST" "$PLIST_PATH"; then
+  info "launchagent ${PLIST_LABEL} already current"
+  rm -f "$TMP_PLIST"
+  if ! launchctl list "$PLIST_LABEL" >/dev/null 2>&1; then
     launchctl load "$PLIST_PATH"
-    info "installed launchagent ${PLIST_LABEL} (persists env across reboots)"
+    info "loaded existing launchagent"
   fi
 else
-  info "skipping LaunchAgent install (PERSIST_ENV=0)"
+  mv "$TMP_PLIST" "$PLIST_PATH"
+  launchctl unload "$PLIST_PATH" 2>/dev/null || true
+  launchctl load "$PLIST_PATH"
+  info "installed launchagent ${PLIST_LABEL}"
 fi
 
-# Wait for the daemon to actually bind the port. Done last in step 3 because
-# installing the PERSIST_ENV LaunchAgent above triggers a kickstart of ollama
-# (RunAtLoad=true), so the service may still be coming back up.
+# Force CLI calls in *this* script to connect via loopback regardless of bind addr.
+OLLAMA_PORT="${OLLAMA_BIND##*:}"
+export OLLAMA_HOST="127.0.0.1:${OLLAMA_PORT}"
+
+# Wait for the daemon to actually bind the port.
 info "waiting for ollama daemon on $OLLAMA_HOST"
 for i in $(seq 1 30); do
   if curl -fsS "http://${OLLAMA_HOST}/api/tags" >/dev/null 2>&1; then
@@ -138,7 +152,7 @@ for i in $(seq 1 30); do
   fi
   if [[ "$i" == "30" ]]; then
     echo "  ! ollama daemon did not become responsive within 30s" >&2
-    echo "    check: brew services list; tail -f \"\$(brew --prefix)/var/log/ollama.log\"" >&2
+    echo "    check: tail -f \"$LOG_PATH\"" >&2
     exit 1
   fi
   sleep 1
@@ -236,7 +250,7 @@ if [[ "$INSTALL_HEALTHCHECK" == "1" ]]; then
   <array>
     <string>/bin/sh</string>
     <string>-c</string>
-    <string>curl -fsS --max-time 5 http://127.0.0.1:${OLLAMA_PORT}/api/tags >/dev/null 2>&amp;1 || { echo "\$(date): /api/tags unhealthy, kickstarting ollama"; launchctl kickstart -k "gui/\$(id -u)/homebrew.mxcl.ollama"; }</string>
+    <string>curl -fsS --max-time 5 http://127.0.0.1:${OLLAMA_PORT}/api/tags >/dev/null 2>&amp;1 || { echo "\$(date): /api/tags unhealthy, kickstarting ollama"; launchctl kickstart -k "gui/\$(id -u)/com.user.ollama"; }</string>
   </array>
   <key>StartInterval</key>
   <integer>60</integer>
@@ -328,7 +342,7 @@ From a Tailscale peer (after MagicDNS is on):
   curl http://\$(hostname -s).<your-tailnet>.ts.net:${OLLAMA_PORT}/api/tags
 
 Logs:
-  ollama (brew stdout):       \$(brew --prefix)/var/log/ollama.log
+  ollama (server stdout/err): ~/Library/Logs/ollama.log
   ollama (application):       ~/.ollama/logs/server.log
   health check:               ~/Library/Logs/com.user.ollama-healthcheck.log
   weekly brew upgrade:        ~/Library/Logs/com.user.brew-weekly-upgrade.log
