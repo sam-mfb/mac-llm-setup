@@ -18,7 +18,7 @@ DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-mlx-bf16}"  # set to "" to skip pulli
 AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); needs sudo
 DISPLAY_SLEEP_MIN="${DISPLAY_SLEEP_MIN:-10}"  # blank the display after N minutes on AC (0 = never)
 LOCK_ON_SLEEP="${LOCK_ON_SLEEP:-1}"           # 1 = require password as soon as display sleeps
-INSTALL_GUI="${INSTALL_GUI:-1}"               # 1 = also install the Ollama menu-bar GUI app (cask)
+INSTALL_GUI="${INSTALL_GUI:-0}"               # 0 = CLI/server only (recommended); 1 = also install the Ollama menu-bar GUI app (cask)
 EXCLUDE_BACKUPS="${EXCLUDE_BACKUPS:-1}"       # 1 = skip Time Machine + Spotlight on ~/.ollama/models
 INSTALL_HEALTHCHECK="${INSTALL_HEALTHCHECK:-1}"  # 1 = LaunchAgent that probes /api/tags every 60s
 INSTALL_AUTOUPDATE="${INSTALL_AUTOUPDATE:-1}"    # 1 = enable macOS auto security updates + weekly brew upgrade
@@ -46,7 +46,20 @@ if [[ "$INSTALL_GUI" == "1" ]]; then
     brew install --cask ollama-app
   fi
 else
-  info "skipping GUI app (INSTALL_GUI=0)"
+  # Ensure the GUI app is absent — remove it if found so it can't race our LaunchAgent for port 11434.
+  if brew list --cask ollama-app >/dev/null 2>&1; then
+    info "removing ollama-app cask (CLI LaunchAgent owns the server)"
+    # Kill the running app and its embedded server before uninstalling.
+    pkill -x "Ollama" 2>/dev/null || true
+    pkill -f "Ollama.app/Contents/Resources/ollama" 2>/dev/null || true
+    # Suppress SMAppService / login-item registration so it doesn't re-register on next open.
+    launchctl disable "gui/$(id -u)/com.ollama.Ollama" 2>/dev/null || true
+    osascript -e 'tell application "System Events" to delete (login items where name is "Ollama")' 2>/dev/null || true
+    brew uninstall --cask ollama-app
+    info "ollama-app removed"
+  else
+    info "ollama-app not installed — nothing to remove"
+  fi
 fi
 
 bold "2/6  Installing Tailscale (GUI app)"
