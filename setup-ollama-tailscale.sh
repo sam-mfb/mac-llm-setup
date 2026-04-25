@@ -14,7 +14,9 @@ set -euo pipefail
 OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfaces (Tailscale + LAN + localhost)
 OLLAMA_KEEP_ALIVE_VAL="${OLLAMA_KEEP_ALIVE_VAL:--1}"   # -1 = pin loaded model in memory forever
 OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resident at a time
-DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-mlx-bf16}"  # set to "" to skip pulling a model
+DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-a4b-it-q8_0}"  # primary model; set "" to skip all pulls
+# Extra models pulled for benchmarking alongside DEFAULT_MODEL (space-separated; idempotent).
+EXTRA_MODELS="${EXTRA_MODELS:-gemma4:26b gemma4:26b-mlx-bf16}"
 AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); needs sudo
 DISPLAY_SLEEP_MIN="${DISPLAY_SLEEP_MIN:-10}"  # blank the display after N minutes on AC (0 = never)
 LOCK_ON_SLEEP="${LOCK_ON_SLEEP:-1}"           # 1 = require password as soon as display sleeps
@@ -184,18 +186,26 @@ EOF
 fi
 
 if [[ -n "$DEFAULT_MODEL" ]]; then
-  bold "5/6  Pulling model: $DEFAULT_MODEL"
+  bold "5/6  Pulling models"
   ollama pull "$DEFAULT_MODEL"
+  for _m in $EXTRA_MODELS; do
+    ollama pull "$_m"
+  done
 else
   bold "5/6  Skipping model pull (DEFAULT_MODEL is empty)"
 fi
 
 if [[ -n "$DEFAULT_MODEL" && -n "$ALIAS_NAME" ]]; then
-  if ollama list 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$ALIAS_NAME"; then
-    bold "6/6  Alias '$ALIAS_NAME' already exists"
-    info "to recreate: ollama rm $ALIAS_NAME && rerun this script"
+  # Check whether the alias already points to the right base model.
+  _alias_from="$(ollama show --modelfile "$ALIAS_NAME" 2>/dev/null | awk '/^FROM/{print $2}')"
+  if [[ "$_alias_from" == "$DEFAULT_MODEL" ]]; then
+    bold "6/6  Alias '$ALIAS_NAME' already points to $DEFAULT_MODEL"
   else
-    bold "6/6  Creating alias '$ALIAS_NAME' from $DEFAULT_MODEL"
+    if [[ -n "$_alias_from" ]]; then
+      info "alias '$ALIAS_NAME' points to '$_alias_from', updating to $DEFAULT_MODEL"
+      ollama rm "$ALIAS_NAME" 2>/dev/null || true
+    fi
+    bold "6/6  Creating alias '$ALIAS_NAME' → $DEFAULT_MODEL"
     MODELFILE="$(mktemp -t ollama-modelfile)"
     trap 'rm -f "$MODELFILE"' EXIT
     cat >"$MODELFILE" <<EOF
