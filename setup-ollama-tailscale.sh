@@ -5,6 +5,7 @@
 #
 # Usage:   bash setup-ollama-tailscale.sh
 # Tweak:   DEFAULT_MODEL=qwen2.5:7b DISABLE_SLEEP=1 bash setup-ollama-tailscale.sh
+# Headless: INSTALL_GUI=0 bash setup-ollama-tailscale.sh
 
 set -euo pipefail
 
@@ -12,6 +13,7 @@ set -euo pipefail
 OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfaces (Tailscale + LAN + localhost)
 DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-mlx-bf16}"  # set to "" to skip pulling a model
 DISABLE_SLEEP="${DISABLE_SLEEP:-0}"           # 1 = keep machine awake on AC power (needs sudo)
+INSTALL_GUI="${INSTALL_GUI:-1}"               # 1 = also install the Ollama menu-bar GUI app (cask)
 # -------------------------------------------------------------------------
 
 bold() { printf "\n\033[1m%s\033[0m\n" "$*"; }
@@ -24,9 +26,18 @@ fi
 
 bold "1/5  Installing Ollama"
 if brew list --formula ollama >/dev/null 2>&1; then
-  info "already installed"
+  info "formula (CLI/server) already installed"
 else
   brew install ollama
+fi
+if [[ "$INSTALL_GUI" == "1" ]]; then
+  if brew list --cask ollama-app >/dev/null 2>&1; then
+    info "GUI app already installed"
+  else
+    brew install --cask ollama-app
+  fi
+else
+  info "skipping GUI app (INSTALL_GUI=0)"
 fi
 
 bold "2/5  Installing Tailscale (GUI app)"
