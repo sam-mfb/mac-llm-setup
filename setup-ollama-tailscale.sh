@@ -16,6 +16,7 @@ OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resi
 DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-mlx-bf16}"  # set to "" to skip pulling a model
 DISABLE_SLEEP="${DISABLE_SLEEP:-0}"           # 1 = keep machine awake on AC power (needs sudo)
 INSTALL_GUI="${INSTALL_GUI:-1}"               # 1 = also install the Ollama menu-bar GUI app (cask)
+PERSIST_ENV="${PERSIST_ENV:-1}"               # 1 = install a LaunchAgent so env survives reboots
 ALIAS_NAME="${ALIAS_NAME:-gemma:best}"        # alias to create from DEFAULT_MODEL; set "" to skip
 # -------------------------------------------------------------------------
 
@@ -71,6 +72,44 @@ else
   info "ollama service (re)started"
   # Give the daemon a beat to come up before we try to pull
   sleep 2
+fi
+
+# launchctl setenv is per-launchd-session, so without a LaunchAgent the
+# env resets on reboot. This agent re-applies the values at login and
+# kickstarts the brew-managed ollama service to pick them up.
+if [[ "$PERSIST_ENV" == "1" ]]; then
+  PLIST_LABEL="com.user.ollama-env"
+  PLIST_PATH="$HOME/Library/LaunchAgents/${PLIST_LABEL}.plist"
+  desired_plist=$(cat <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>${PLIST_LABEL}</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>launchctl setenv OLLAMA_HOST "${OLLAMA_BIND}"; launchctl setenv OLLAMA_KEEP_ALIVE "${OLLAMA_KEEP_ALIVE_VAL}"; launchctl setenv OLLAMA_MAX_LOADED_MODELS "${OLLAMA_MAX_LOADED}"; launchctl kickstart -k "gui/\$(id -u)/homebrew.mxcl.ollama" 2>/dev/null || true</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+</dict>
+</plist>
+PLIST
+)
+  mkdir -p "$(dirname "$PLIST_PATH")"
+  if [[ -f "$PLIST_PATH" ]] && diff -q <(printf '%s\n' "$desired_plist") "$PLIST_PATH" >/dev/null 2>&1; then
+    info "launchagent ${PLIST_LABEL} already current"
+  else
+    printf '%s\n' "$desired_plist" > "$PLIST_PATH"
+    launchctl unload "$PLIST_PATH" 2>/dev/null || true
+    launchctl load "$PLIST_PATH"
+    info "installed launchagent ${PLIST_LABEL} (persists env across reboots)"
+  fi
+else
+  info "skipping LaunchAgent install (PERSIST_ENV=0)"
 fi
 
 bold "4/6  Launching Tailscale"
