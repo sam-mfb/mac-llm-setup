@@ -88,21 +88,6 @@ fi
 OLLAMA_PORT="${OLLAMA_BIND##*:}"
 export OLLAMA_HOST="127.0.0.1:${OLLAMA_PORT}"
 
-# Wait for the daemon to actually bind the port (fresh installs can take >2s).
-info "waiting for ollama daemon on $OLLAMA_HOST"
-for i in $(seq 1 30); do
-  if curl -fsS "http://${OLLAMA_HOST}/api/tags" >/dev/null 2>&1; then
-    info "ollama is responsive"
-    break
-  fi
-  if [[ "$i" == "30" ]]; then
-    echo "  ! ollama daemon did not become responsive within 30s" >&2
-    echo "    check: brew services list; tail -f \"\$(brew --prefix)/var/log/ollama.log\"" >&2
-    exit 1
-  fi
-  sleep 1
-done
-
 # launchctl setenv is per-launchd-session, so without a LaunchAgent the
 # env resets on reboot. This agent re-applies the values at login and
 # kickstarts the brew-managed ollama service to pick them up.
@@ -141,6 +126,23 @@ PLIST
 else
   info "skipping LaunchAgent install (PERSIST_ENV=0)"
 fi
+
+# Wait for the daemon to actually bind the port. Done last in step 3 because
+# installing the PERSIST_ENV LaunchAgent above triggers a kickstart of ollama
+# (RunAtLoad=true), so the service may still be coming back up.
+info "waiting for ollama daemon on $OLLAMA_HOST"
+for i in $(seq 1 30); do
+  if curl -fsS "http://${OLLAMA_HOST}/api/tags" >/dev/null 2>&1; then
+    info "ollama is responsive"
+    break
+  fi
+  if [[ "$i" == "30" ]]; then
+    echo "  ! ollama daemon did not become responsive within 30s" >&2
+    echo "    check: brew services list; tail -f \"\$(brew --prefix)/var/log/ollama.log\"" >&2
+    exit 1
+  fi
+  sleep 1
+done
 
 bold "4/6  Launching Tailscale"
 if pgrep -x Tailscale >/dev/null 2>&1; then
