@@ -17,8 +17,12 @@ OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resi
 DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-mlx-bf16}"  # set to "" to skip pulling a model
 AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); needs sudo
 DISPLAY_SLEEP_MIN="${DISPLAY_SLEEP_MIN:-10}"  # blank the display after N minutes on AC (0 = never)
+LOCK_ON_SLEEP="${LOCK_ON_SLEEP:-1}"           # 1 = require password as soon as display sleeps
 INSTALL_GUI="${INSTALL_GUI:-1}"               # 1 = also install the Ollama menu-bar GUI app (cask)
 PERSIST_ENV="${PERSIST_ENV:-1}"               # 1 = install a LaunchAgent so env survives reboots
+EXCLUDE_BACKUPS="${EXCLUDE_BACKUPS:-1}"       # 1 = skip Time Machine + Spotlight on ~/.ollama/models
+INSTALL_HEALTHCHECK="${INSTALL_HEALTHCHECK:-1}"  # 1 = LaunchAgent that probes /api/tags every 60s
+INSTALL_AUTOUPDATE="${INSTALL_AUTOUPDATE:-1}"    # 1 = enable macOS auto security updates + weekly brew upgrade
 ALIAS_NAME="${ALIAS_NAME:-gemma:best}"        # alias to create from DEFAULT_MODEL; set "" to skip
 # -------------------------------------------------------------------------
 
@@ -179,22 +183,153 @@ else
 fi
 
 if [[ "$AWAKE_ON_AC" == "1" ]]; then
-  bold "Bonus: keep Mac awake on AC (display sleeps after ${DISPLAY_SLEEP_MIN}m, lid-close safe)"
+  bold "Bonus: power policy on AC (display sleeps after ${DISPLAY_SLEEP_MIN}m, lid-close safe)"
   # sleep 0          = system never auto-sleeps on AC
   # displaysleep N   = blank display after N minutes (0 = never)
   # disablesleep 1   = block sleep entirely, including on lid close
-  sudo pmset -c sleep 0 displaysleep "$DISPLAY_SLEEP_MIN" disablesleep 1
-  info "to undo: sudo pmset -c disablesleep 0 sleep 1 displaysleep 10"
+  # autorestart 1    = boot back up after a power failure
+  # womp 1           = wake on network (magic packet)
+  # powernap 0       = no spurious wake/sleep cycles for background tasks
+  sudo pmset -c \
+    sleep 0 \
+    displaysleep "$DISPLAY_SLEEP_MIN" \
+    disablesleep 1 \
+    autorestart 1 \
+    womp 1 \
+    powernap 0
+  info "pmset: never sleep, lid-close safe, auto-restart on power loss, wake on network"
+fi
+
+if [[ "$LOCK_ON_SLEEP" == "1" ]]; then
+  bold "Bonus: lock screen as soon as the display sleeps"
+  defaults write com.apple.screensaver askForPassword -int 1
+  defaults write com.apple.screensaver askForPasswordDelay -int 0
+  info "screen will lock immediately on display sleep"
+fi
+
+if [[ "$EXCLUDE_BACKUPS" == "1" ]]; then
+  bold "Bonus: excluding ~/.ollama/models from Time Machine + Spotlight"
+  mkdir -p "$HOME/.ollama/models"
+  # tmutil addexclusion is idempotent (no error if already excluded)
+  tmutil addexclusion "$HOME/.ollama/models" 2>/dev/null || true
+  # Drop the well-known sentinel file Spotlight respects to skip indexing
+  touch "$HOME/.ollama/models/.metadata_never_index"
+  info "Time Machine: ~/.ollama/models excluded; Spotlight: .metadata_never_index in place"
+fi
+
+if [[ "$INSTALL_HEALTHCHECK" == "1" ]]; then
+  bold "Bonus: ollama health check (probe /api/tags every 60s, kickstart on hang)"
+  HC_LABEL="com.user.ollama-healthcheck"
+  HC_PATH="$HOME/Library/LaunchAgents/${HC_LABEL}.plist"
+  HC_LOG="$HOME/Library/Logs/${HC_LABEL}.log"
+  TMP_HC="$(mktemp -t ollama-healthcheck-plist)"
+  cat >"$TMP_HC" <<HC
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>${HC_LABEL}</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>curl -fsS --max-time 5 http://127.0.0.1:${OLLAMA_PORT}/api/tags >/dev/null 2>&amp;1 || { echo "\$(date): /api/tags unhealthy, kickstarting ollama"; launchctl kickstart -k "gui/\$(id -u)/homebrew.mxcl.ollama"; }</string>
+  </array>
+  <key>StartInterval</key>
+  <integer>60</integer>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>${HC_LOG}</string>
+  <key>StandardErrorPath</key>
+  <string>${HC_LOG}</string>
+</dict>
+</plist>
+HC
+  mkdir -p "$(dirname "$HC_PATH")" "$(dirname "$HC_LOG")"
+  if [[ -f "$HC_PATH" ]] && cmp -s "$TMP_HC" "$HC_PATH"; then
+    info "${HC_LABEL} already current"
+    rm -f "$TMP_HC"
+  else
+    mv "$TMP_HC" "$HC_PATH"
+    launchctl unload "$HC_PATH" 2>/dev/null || true
+    launchctl load "$HC_PATH"
+    info "installed ${HC_LABEL} (log: ${HC_LOG})"
+  fi
+fi
+
+if [[ "$INSTALL_AUTOUPDATE" == "1" ]]; then
+  bold "Bonus: macOS auto-updates + weekly brew upgrade"
+
+  # macOS background update checks + auto-install of security responses.
+  sudo softwareupdate --schedule on >/dev/null
+  sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+  sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool true
+  sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
+  info "softwareupdate: scheduled, security responses auto-install"
+
+  # Weekly LaunchAgent: Sunday 04:00 → brew update && brew upgrade ollama
+  BREW_BIN="$(command -v brew)"
+  BU_LABEL="com.user.brew-weekly-upgrade"
+  BU_PATH="$HOME/Library/LaunchAgents/${BU_LABEL}.plist"
+  BU_LOG="$HOME/Library/Logs/${BU_LABEL}.log"
+  TMP_BU="$(mktemp -t brew-upgrade-plist)"
+  cat >"$TMP_BU" <<BU
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>${BU_LABEL}</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>echo "--- \$(date) ---"; ${BREW_BIN} update &amp;&amp; ${BREW_BIN} upgrade ollama</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>0</integer>
+    <key>Hour</key>
+    <integer>4</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>${BU_LOG}</string>
+  <key>StandardErrorPath</key>
+  <string>${BU_LOG}</string>
+</dict>
+</plist>
+BU
+  mkdir -p "$(dirname "$BU_PATH")" "$(dirname "$BU_LOG")"
+  if [[ -f "$BU_PATH" ]] && cmp -s "$TMP_BU" "$BU_PATH"; then
+    info "${BU_LABEL} already current"
+    rm -f "$TMP_BU"
+  else
+    mv "$TMP_BU" "$BU_PATH"
+    launchctl unload "$BU_PATH" 2>/dev/null || true
+    launchctl load "$BU_PATH"
+    info "installed ${BU_LABEL} (Sundays 04:00, log: ${BU_LOG})"
+  fi
 fi
 
 bold "Done."
-cat <<'EOF'
+cat <<EOF
 
 Verify locally:
-  curl http://127.0.0.1:11434/api/tags
+  curl http://127.0.0.1:${OLLAMA_PORT}/api/tags
 
 From a Tailscale peer (after MagicDNS is on):
-  curl http://$(hostname -s).<your-tailnet>.ts.net:11434/api/tags
+  curl http://\$(hostname -s).<your-tailnet>.ts.net:${OLLAMA_PORT}/api/tags
+
+Logs:
+  ollama (brew stdout):       \$(brew --prefix)/var/log/ollama.log
+  ollama (application):       ~/.ollama/logs/server.log
+  health check:               ~/Library/Logs/com.user.ollama-healthcheck.log
+  weekly brew upgrade:        ~/Library/Logs/com.user.brew-weekly-upgrade.log
 
 Your Tailscale IPv4 (once signed in):
   /Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4
