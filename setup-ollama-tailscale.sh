@@ -196,13 +196,14 @@ else
 fi
 
 if [[ -n "$DEFAULT_MODEL" && -n "$ALIAS_NAME" ]]; then
-  # Check whether the alias already points to the right base model.
-  _alias_from="$(ollama show --modelfile "$ALIAS_NAME" 2>/dev/null | awk '/^FROM/{print $2}')"
-  if [[ "$_alias_from" == "$DEFAULT_MODEL" ]]; then
+  # Compare digests: alias is correct only if it shares the same ID as DEFAULT_MODEL.
+  _alias_id="$(ollama list 2>/dev/null | awk -v n="$ALIAS_NAME"  '$1==n{print $2}')"
+  _target_id="$(ollama list 2>/dev/null | awk -v n="$DEFAULT_MODEL" '$1==n{print $2}')"
+  if [[ -n "$_alias_id" && "$_alias_id" == "$_target_id" ]]; then
     bold "6/6  Alias '$ALIAS_NAME' already points to $DEFAULT_MODEL"
   else
-    if [[ -n "$_alias_from" ]]; then
-      info "alias '$ALIAS_NAME' points to '$_alias_from', updating to $DEFAULT_MODEL"
+    if [[ -n "$_alias_id" ]]; then
+      info "alias '$ALIAS_NAME' digest mismatch, updating to $DEFAULT_MODEL"
       ollama rm "$ALIAS_NAME" 2>/dev/null || true
     fi
     bold "6/6  Creating alias '$ALIAS_NAME' → $DEFAULT_MODEL"
