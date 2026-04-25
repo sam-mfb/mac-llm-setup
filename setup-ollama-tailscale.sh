@@ -80,7 +80,8 @@ fi
 if [[ "$PERSIST_ENV" == "1" ]]; then
   PLIST_LABEL="com.user.ollama-env"
   PLIST_PATH="$HOME/Library/LaunchAgents/${PLIST_LABEL}.plist"
-  desired_plist=$(cat <<PLIST
+  TMP_PLIST="$(mktemp -t ollama-env-plist)"
+  cat >"$TMP_PLIST" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -98,12 +99,12 @@ if [[ "$PERSIST_ENV" == "1" ]]; then
 </dict>
 </plist>
 PLIST
-)
   mkdir -p "$(dirname "$PLIST_PATH")"
-  if [[ -f "$PLIST_PATH" ]] && diff -q <(printf '%s\n' "$desired_plist") "$PLIST_PATH" >/dev/null 2>&1; then
+  if [[ -f "$PLIST_PATH" ]] && cmp -s "$TMP_PLIST" "$PLIST_PATH"; then
     info "launchagent ${PLIST_LABEL} already current"
+    rm -f "$TMP_PLIST"
   else
-    printf '%s\n' "$desired_plist" > "$PLIST_PATH"
+    mv "$TMP_PLIST" "$PLIST_PATH"
     launchctl unload "$PLIST_PATH" 2>/dev/null || true
     launchctl load "$PLIST_PATH"
     info "installed launchagent ${PLIST_LABEL} (persists env across reboots)"
