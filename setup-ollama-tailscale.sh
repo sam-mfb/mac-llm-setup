@@ -11,6 +11,8 @@ set -euo pipefail
 
 # --- Config (override via env vars) --------------------------------------
 OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfaces (Tailscale + LAN + localhost)
+OLLAMA_KEEP_ALIVE_VAL="${OLLAMA_KEEP_ALIVE_VAL:--1}"   # -1 = pin loaded model in memory forever
+OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resident at a time
 DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-mlx-bf16}"  # set to "" to skip pulling a model
 DISABLE_SLEEP="${DISABLE_SLEEP:-0}"           # 1 = keep machine awake on AC power (needs sudo)
 INSTALL_GUI="${INSTALL_GUI:-1}"               # 1 = also install the Ollama menu-bar GUI app (cask)
@@ -48,16 +50,23 @@ else
   brew install --cask tailscale-app
 fi
 
-bold "3/6  Configuring Ollama to listen on $OLLAMA_BIND"
+bold "3/6  Configuring Ollama (bind=$OLLAMA_BIND keep_alive=$OLLAMA_KEEP_ALIVE_VAL max_loaded=$OLLAMA_MAX_LOADED)"
 current_host="$(launchctl getenv OLLAMA_HOST 2>/dev/null || true)"
+current_keepalive="$(launchctl getenv OLLAMA_KEEP_ALIVE 2>/dev/null || true)"
+current_max="$(launchctl getenv OLLAMA_MAX_LOADED_MODELS 2>/dev/null || true)"
 service_started=0
 if brew services list 2>/dev/null | awk '$1=="ollama"{print $2}' | grep -q started; then
   service_started=1
 fi
-if [[ "$current_host" == "$OLLAMA_BIND" && "$service_started" == "1" ]]; then
+if [[ "$current_host" == "$OLLAMA_BIND" \
+   && "$current_keepalive" == "$OLLAMA_KEEP_ALIVE_VAL" \
+   && "$current_max" == "$OLLAMA_MAX_LOADED" \
+   && "$service_started" == "1" ]]; then
   info "already configured and running"
 else
   launchctl setenv OLLAMA_HOST "$OLLAMA_BIND"
+  launchctl setenv OLLAMA_KEEP_ALIVE "$OLLAMA_KEEP_ALIVE_VAL"
+  launchctl setenv OLLAMA_MAX_LOADED_MODELS "$OLLAMA_MAX_LOADED"
   brew services restart ollama >/dev/null
   info "ollama service (re)started"
   # Give the daemon a beat to come up before we try to pull
