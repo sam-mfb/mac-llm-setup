@@ -3,9 +3,10 @@
 # Sets up Ollama + Tailscale on a fresh Mac for a local inference cluster.
 # Assumes Homebrew is already installed.
 #
-# Usage:   bash setup-ollama-tailscale.sh
-# Tweak:   DEFAULT_MODEL=qwen2.5:7b DISABLE_SLEEP=1 bash setup-ollama-tailscale.sh
+# Usage:    bash setup-ollama-tailscale.sh
+# Tweak:    DEFAULT_MODEL=qwen2.5:7b DISPLAY_SLEEP_MIN=15 bash setup-ollama-tailscale.sh
 # Headless: INSTALL_GUI=0 bash setup-ollama-tailscale.sh
+# Sleeper:  AWAKE_ON_AC=0 bash setup-ollama-tailscale.sh    # keep stock pmset settings
 
 set -euo pipefail
 
@@ -14,7 +15,8 @@ OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfac
 OLLAMA_KEEP_ALIVE_VAL="${OLLAMA_KEEP_ALIVE_VAL:--1}"   # -1 = pin loaded model in memory forever
 OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resident at a time
 DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-mlx-bf16}"  # set to "" to skip pulling a model
-DISABLE_SLEEP="${DISABLE_SLEEP:-0}"           # 1 = keep machine awake on AC power (needs sudo)
+AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); needs sudo
+DISPLAY_SLEEP_MIN="${DISPLAY_SLEEP_MIN:-10}"  # blank the display after N minutes on AC (0 = never)
 INSTALL_GUI="${INSTALL_GUI:-1}"               # 1 = also install the Ollama menu-bar GUI app (cask)
 PERSIST_ENV="${PERSIST_ENV:-1}"               # 1 = install a LaunchAgent so env survives reboots
 ALIAS_NAME="${ALIAS_NAME:-gemma:best}"        # alias to create from DEFAULT_MODEL; set "" to skip
@@ -176,10 +178,13 @@ else
   bold "6/6  Skipping alias creation"
 fi
 
-if [[ "$DISABLE_SLEEP" == "1" ]]; then
-  bold "Bonus: disabling sleep on AC power (sudo required)"
-  sudo pmset -c sleep 0 disablesleep 1
-  info "run 'sudo pmset -c disablesleep 0' to undo"
+if [[ "$AWAKE_ON_AC" == "1" ]]; then
+  bold "Bonus: keep Mac awake on AC (display sleeps after ${DISPLAY_SLEEP_MIN}m, lid-close safe)"
+  # sleep 0          = system never auto-sleeps on AC
+  # displaysleep N   = blank display after N minutes (0 = never)
+  # disablesleep 1   = block sleep entirely, including on lid close
+  sudo pmset -c sleep 0 displaysleep "$DISPLAY_SLEEP_MIN" disablesleep 1
+  info "to undo: sudo pmset -c disablesleep 0 sleep 1 displaysleep 10"
 fi
 
 bold "Done."
