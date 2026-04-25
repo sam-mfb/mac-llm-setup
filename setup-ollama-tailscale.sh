@@ -14,6 +14,7 @@ OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfac
 DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-mlx-bf16}"  # set to "" to skip pulling a model
 DISABLE_SLEEP="${DISABLE_SLEEP:-0}"           # 1 = keep machine awake on AC power (needs sudo)
 INSTALL_GUI="${INSTALL_GUI:-1}"               # 1 = also install the Ollama menu-bar GUI app (cask)
+ALIAS_NAME="${ALIAS_NAME:-gemma:best}"        # alias to create from DEFAULT_MODEL; set "" to skip
 # -------------------------------------------------------------------------
 
 bold() { printf "\n\033[1m%s\033[0m\n" "$*"; }
@@ -24,7 +25,7 @@ if ! command -v brew >/dev/null 2>&1; then
   exit 1
 fi
 
-bold "1/5  Installing Ollama"
+bold "1/6  Installing Ollama"
 if brew list --formula ollama >/dev/null 2>&1; then
   info "formula (CLI/server) already installed"
 else
@@ -40,14 +41,14 @@ else
   info "skipping GUI app (INSTALL_GUI=0)"
 fi
 
-bold "2/5  Installing Tailscale (GUI app)"
+bold "2/6  Installing Tailscale (GUI app)"
 if brew list --cask tailscale-app >/dev/null 2>&1; then
   info "already installed"
 else
   brew install --cask tailscale-app
 fi
 
-bold "3/5  Configuring Ollama to listen on $OLLAMA_BIND"
+bold "3/6  Configuring Ollama to listen on $OLLAMA_BIND"
 launchctl setenv OLLAMA_HOST "$OLLAMA_BIND"
 brew services restart ollama >/dev/null
 info "ollama service running"
@@ -55,7 +56,7 @@ info "ollama service running"
 # Give the daemon a beat to come up before we try to pull
 sleep 2
 
-bold "4/5  Launching Tailscale"
+bold "4/6  Launching Tailscale"
 open -a Tailscale || true
 cat <<'EOF'
   → First run only: click the Tailscale menu-bar icon and sign in.
@@ -64,10 +65,26 @@ cat <<'EOF'
 EOF
 
 if [[ -n "$DEFAULT_MODEL" ]]; then
-  bold "5/5  Pulling model: $DEFAULT_MODEL"
+  bold "5/6  Pulling model: $DEFAULT_MODEL"
   ollama pull "$DEFAULT_MODEL"
 else
-  bold "5/5  Skipping model pull (DEFAULT_MODEL is empty)"
+  bold "5/6  Skipping model pull (DEFAULT_MODEL is empty)"
+fi
+
+if [[ -n "$DEFAULT_MODEL" && -n "$ALIAS_NAME" ]]; then
+  bold "6/6  Creating alias '$ALIAS_NAME' from $DEFAULT_MODEL"
+  MODELFILE="$(mktemp -t ollama-modelfile)"
+  trap 'rm -f "$MODELFILE"' EXIT
+  cat >"$MODELFILE" <<EOF
+FROM $DEFAULT_MODEL
+PARAMETER temperature 1.0
+PARAMETER top_p 0.95
+PARAMETER top_k 64
+EOF
+  ollama create "$ALIAS_NAME" -f "$MODELFILE"
+  info "alias ready: ollama run $ALIAS_NAME"
+else
+  bold "6/6  Skipping alias creation"
 fi
 
 if [[ "$DISABLE_SLEEP" == "1" ]]; then
