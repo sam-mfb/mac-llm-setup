@@ -68,11 +68,34 @@ else
   launchctl setenv OLLAMA_HOST "$OLLAMA_BIND"
   launchctl setenv OLLAMA_KEEP_ALIVE "$OLLAMA_KEEP_ALIVE_VAL"
   launchctl setenv OLLAMA_MAX_LOADED_MODELS "$OLLAMA_MAX_LOADED"
-  brew services restart ollama >/dev/null
+  if [[ "$service_started" == "1" ]]; then
+    brew services restart ollama >/dev/null
+  else
+    brew services start ollama >/dev/null
+  fi
   info "ollama service (re)started"
-  # Give the daemon a beat to come up before we try to pull
-  sleep 2
 fi
+
+# Force CLI calls in *this* script to connect via loopback. Without this, a
+# shell that inherited OLLAMA_HOST=0.0.0.0:port from a prior launchctl setenv
+# would try to connect to 0.0.0.0 and fail.
+OLLAMA_PORT="${OLLAMA_BIND##*:}"
+export OLLAMA_HOST="127.0.0.1:${OLLAMA_PORT}"
+
+# Wait for the daemon to actually bind the port (fresh installs can take >2s).
+info "waiting for ollama daemon on $OLLAMA_HOST"
+for i in $(seq 1 30); do
+  if curl -fsS "http://${OLLAMA_HOST}/api/tags" >/dev/null 2>&1; then
+    info "ollama is responsive"
+    break
+  fi
+  if [[ "$i" == "30" ]]; then
+    echo "  ! ollama daemon did not become responsive within 30s" >&2
+    echo "    check: brew services list; tail -f \"\$(brew --prefix)/var/log/ollama.log\"" >&2
+    exit 1
+  fi
+  sleep 1
+done
 
 # launchctl setenv is per-launchd-session, so without a LaunchAgent the
 # env resets on reboot. This agent re-applies the values at login and
