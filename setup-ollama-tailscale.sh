@@ -49,20 +49,32 @@ else
 fi
 
 bold "3/6  Configuring Ollama to listen on $OLLAMA_BIND"
-launchctl setenv OLLAMA_HOST "$OLLAMA_BIND"
-brew services restart ollama >/dev/null
-info "ollama service running"
-
-# Give the daemon a beat to come up before we try to pull
-sleep 2
+current_host="$(launchctl getenv OLLAMA_HOST 2>/dev/null || true)"
+service_started=0
+if brew services list 2>/dev/null | awk '$1=="ollama"{print $2}' | grep -q started; then
+  service_started=1
+fi
+if [[ "$current_host" == "$OLLAMA_BIND" && "$service_started" == "1" ]]; then
+  info "already configured and running"
+else
+  launchctl setenv OLLAMA_HOST "$OLLAMA_BIND"
+  brew services restart ollama >/dev/null
+  info "ollama service (re)started"
+  # Give the daemon a beat to come up before we try to pull
+  sleep 2
+fi
 
 bold "4/6  Launching Tailscale"
-open -a Tailscale || true
-cat <<'EOF'
+if pgrep -x Tailscale >/dev/null 2>&1; then
+  info "already running"
+else
+  open -a Tailscale || true
+  cat <<'EOF'
   → First run only: click the Tailscale menu-bar icon and sign in.
     Then visit https://login.tailscale.com/admin/dns and turn on MagicDNS
     so peers can be reached by hostname (e.g. macbook-pro.tail1234.ts.net).
 EOF
+fi
 
 if [[ -n "$DEFAULT_MODEL" ]]; then
   bold "5/6  Pulling model: $DEFAULT_MODEL"
@@ -72,17 +84,22 @@ else
 fi
 
 if [[ -n "$DEFAULT_MODEL" && -n "$ALIAS_NAME" ]]; then
-  bold "6/6  Creating alias '$ALIAS_NAME' from $DEFAULT_MODEL"
-  MODELFILE="$(mktemp -t ollama-modelfile)"
-  trap 'rm -f "$MODELFILE"' EXIT
-  cat >"$MODELFILE" <<EOF
+  if ollama list 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$ALIAS_NAME"; then
+    bold "6/6  Alias '$ALIAS_NAME' already exists"
+    info "to recreate: ollama rm $ALIAS_NAME && rerun this script"
+  else
+    bold "6/6  Creating alias '$ALIAS_NAME' from $DEFAULT_MODEL"
+    MODELFILE="$(mktemp -t ollama-modelfile)"
+    trap 'rm -f "$MODELFILE"' EXIT
+    cat >"$MODELFILE" <<EOF
 FROM $DEFAULT_MODEL
 PARAMETER temperature 1.0
 PARAMETER top_p 0.95
 PARAMETER top_k 64
 EOF
-  ollama create "$ALIAS_NAME" -f "$MODELFILE"
-  info "alias ready: ollama run $ALIAS_NAME"
+    ollama create "$ALIAS_NAME" -f "$MODELFILE"
+    info "alias ready: ollama run $ALIAS_NAME"
+  fi
 else
   bold "6/6  Skipping alias creation"
 fi
