@@ -15,7 +15,7 @@ OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfac
 OLLAMA_KEEP_ALIVE_VAL="${OLLAMA_KEEP_ALIVE_VAL:--1}"   # -1 = pin loaded model in memory forever
 OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resident at a time
 # Models to pull (space-separated; idempotent). Set to "" to skip all pulls.
-PULL_MODELS="${PULL_MODELS:-gemma4:31b gemma4:26b-mlx-bf16 gemma4:26b-a4b-it-q8_0 gemma4:26b}"
+PULL_MODELS="${PULL_MODELS:-gemma4:31b-it-q4_K_M gemma4:26b-mlx-bf16 gemma4:26b-a4b-it-q8_0 gemma4:26b-a4b-it-q4_K_M}"
 AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); needs sudo
 DISPLAY_SLEEP_MIN="${DISPLAY_SLEEP_MIN:-10}"  # blank the display after N minutes on AC (0 = never)
 LOCK_ON_SLEEP="${LOCK_ON_SLEEP:-1}"           # 1 = require password as soon as display sleeps
