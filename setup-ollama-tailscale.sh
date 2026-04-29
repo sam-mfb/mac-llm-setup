@@ -14,9 +14,8 @@ set -euo pipefail
 OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfaces (Tailscale + LAN + localhost)
 OLLAMA_KEEP_ALIVE_VAL="${OLLAMA_KEEP_ALIVE_VAL:--1}"   # -1 = pin loaded model in memory forever
 OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resident at a time
-DEFAULT_MODEL="${DEFAULT_MODEL:-gemma4:26b-a4b-it-q8_0}"  # primary model; set "" to skip all pulls
-# Extra models pulled for benchmarking alongside DEFAULT_MODEL (space-separated; idempotent).
-EXTRA_MODELS="${EXTRA_MODELS:-gemma4:26b gemma4:26b-mlx-bf16}"
+# Models to pull (space-separated; idempotent). Set to "" to skip all pulls.
+PULL_MODELS="${PULL_MODELS:-gemma4:31b gemma4:26b-mlx-bf16 gemma4:26b-a4b-it-q8_0 gemma4:26b}"
 AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); needs sudo
 DISPLAY_SLEEP_MIN="${DISPLAY_SLEEP_MIN:-10}"  # blank the display after N minutes on AC (0 = never)
 LOCK_ON_SLEEP="${LOCK_ON_SLEEP:-1}"           # 1 = require password as soon as display sleeps
@@ -24,7 +23,6 @@ INSTALL_GUI="${INSTALL_GUI:-0}"               # 0 = CLI/server only (recommended
 EXCLUDE_BACKUPS="${EXCLUDE_BACKUPS:-1}"       # 1 = skip Time Machine + Spotlight on ~/.ollama/models
 INSTALL_HEALTHCHECK="${INSTALL_HEALTHCHECK:-1}"  # 1 = LaunchAgent that probes /api/tags every 60s
 INSTALL_AUTOUPDATE="${INSTALL_AUTOUPDATE:-1}"    # 1 = enable macOS auto security updates + weekly brew upgrade
-ALIAS_NAME="${ALIAS_NAME:-gemma:best}"        # alias to create from DEFAULT_MODEL; set "" to skip
 # -------------------------------------------------------------------------
 
 bold() { printf "\n\033[1m%s\033[0m\n" "$*"; }
@@ -185,42 +183,16 @@ else
 EOF
 fi
 
-if [[ -n "$DEFAULT_MODEL" ]]; then
+if [[ -n "$PULL_MODELS" ]]; then
   bold "5/6  Pulling models"
-  ollama pull "$DEFAULT_MODEL"
-  for _m in $EXTRA_MODELS; do
+  for _m in $PULL_MODELS; do
     ollama pull "$_m"
   done
 else
-  bold "5/6  Skipping model pull (DEFAULT_MODEL is empty)"
+  bold "5/6  Skipping model pull (PULL_MODELS is empty)"
 fi
 
-if [[ -n "$DEFAULT_MODEL" && -n "$ALIAS_NAME" ]]; then
-  # Compare digests: alias is correct only if it shares the same ID as DEFAULT_MODEL.
-  _alias_id="$(ollama list 2>/dev/null | awk -v n="$ALIAS_NAME"  '$1==n{print $2}')"
-  _target_id="$(ollama list 2>/dev/null | awk -v n="$DEFAULT_MODEL" '$1==n{print $2}')"
-  if [[ -n "$_alias_id" && "$_alias_id" == "$_target_id" ]]; then
-    bold "6/6  Alias '$ALIAS_NAME' already points to $DEFAULT_MODEL"
-  else
-    if [[ -n "$_alias_id" ]]; then
-      info "alias '$ALIAS_NAME' digest mismatch, updating to $DEFAULT_MODEL"
-      ollama rm "$ALIAS_NAME" 2>/dev/null || true
-    fi
-    bold "6/6  Creating alias '$ALIAS_NAME' → $DEFAULT_MODEL"
-    MODELFILE="$(mktemp -t ollama-modelfile)"
-    trap 'rm -f "$MODELFILE"' EXIT
-    cat >"$MODELFILE" <<EOF
-FROM $DEFAULT_MODEL
-PARAMETER temperature 1.0
-PARAMETER top_p 0.95
-PARAMETER top_k 64
-EOF
-    ollama create "$ALIAS_NAME" -f "$MODELFILE"
-    info "alias ready: ollama run $ALIAS_NAME"
-  fi
-else
-  bold "6/6  Skipping alias creation"
-fi
+bold "6/6  Done pulling models"
 
 if [[ "$AWAKE_ON_AC" == "1" ]]; then
   bold "Bonus: power policy on AC (display sleeps after ${DISPLAY_SLEEP_MIN}m, lid-close safe)"
