@@ -1,0 +1,647 @@
+Holt v. Department of Justice
+
+Filed: 2024-09-24
+Judges: 
+URL: https://www.courtlistener.com/opinion/10165385/holt-v-department-of-justice/
+
+================================================================================
+
+--- 100trialcourt (Author: ) ---
+
+IN THE UNITED STATES DISTRICT COURT                        
+             EASTERN DISTRICT OF ARKANSAS                            
+                   CENTRAL DIVISION                                  
+
+GREGORY HOLT, ADC # 129616                                                
+also known as Abdul Maalik Muhammad                      PLAINTIFF        
+
+v.                       Case No. 4:22-cv-00605-KGB                       
+
+DEPARTMENT OF JUSTICE                                        DEFENDANT    
+
+                  OPINION AND ORDER                                  
+
+Before the Court are defendant Department of Justice’s (“DOJ”) motion to extend time 
+(Dkt. No. 22) and a motion for summary judgment (Dkt. No. 26).  For the following reasons, the 
+Court grants the motion to extend time, considers the DOJ’s motion for summary judgment timely 
+filed, and grants the DOJ’s motion for summary judgment (Dkt. Nos. 22; 26).   
+I.   Motion To Extend Time                                           
+On November 1, 2023, the DOJ filed its motion to extend time (Dkt. No. 22).  The DOJ 
+requested up to, and including, November 22, 2023, to file its motion for summary judgment 
+because it required additional time to gather information regarding the response of the Federal 
+Bureau of Investigation (“FBI”) to plaintiff Gregory Holt’s requests (Id., ¶¶ 3–4).  On November 
+2, 2023, the Clerk of Court filed a deficiency letter noting that the motion to extend time did not 
+contain a statement that the movant contacted the adverse party regarding the motion in accordance 
+with Rule 6.2(b) of the Local Rules of the United States District Court for the Eastern and Western 
+Districts of Arkansas (Dkt. No. 23).  The Court notes that the DOJ filed an updated version to 
+correct the deficiency (Dkt. No. 22-1).                                   
+On November 8, 2023, Mr. Holt filed a response in opposition to the motion in which he 
+challenged the DOJ’s assertion that it needed additional time to gather information (Dkt. No. 24, 
+¶¶ 3–4).  Mr. Holt asserted that he had not received the document that caused him to file the 
+litigation and that the DOJ’s motion was not made in good faith (Id., ¶¶ 5, 7).  Additionally, Mr. 
+Holt noted the deficiency letter and stated that the DOJ’s motion should be denied, even if the DOJ 
+cured the deficiency (Id., ¶ 8).                                          
+The DOJ replied on November 15, 2023, stating that the additional time sought by the DOJ 
+was “required to fully explain the bases for its various responses to [Mr. Holt’s] broad request, and 
+
+the extension sought [wa]s not for the purpose of delay.” (Dkt. No. 25, ¶ 4).  On November 24, 
+2023, Mr. Holt responded to the DOJ’s reply, renewing his objections (Dkt. No. 30).  The DOJ 
+filed its motion for summary judgment on November 22, 2023 (Dkt. No. 26). 
+For good cause shown, the Court grants the DOJ’s motion to extend time (Dkt. No. 22).  
+The Court extends the time to file a motion for summary judgment up to, and including, November 
+22, 2023.  The DOJ’s motion for summary judgment is timely filed (Dkt. No. 26).  
+II.  Motion For Summary Judgment                                     
+Mr. Holt commenced this action under the Freedom of Information Act (“FOIA”), 5 U.S.C. 
+§ 552, on June 30, 2023 (Dkt. No. 2).  Through his complaint, Mr. Holt seeks “the disclosure and 
+
+release of agency records pertaining to information that the Federal Bureau of Investigation (FBI) 
+supplied to Jacob Higgins, who is the Security Threat and Terrorist Group (STTG) Coordinator at 
+the Arkansas Department of Correction.” (Id., at 1–2).  Mr. Holt further states that: 
+This information led directly to Plaintiff being placed in an STTG file, which is the 
+subject of another complaint pending in the Eastern District of Arkansas.  (See Holt 
+[v.]  Higgins,  Case  No.  4:21-cv-01226-JM-JTR,  U.S.D.C.,  E.D.  Ark.)    These 
+records  were  improperly  withheld  from  the  Plaintiff  by  [the  DOJ]  and  its 
+component, [the FBI].                                                
+
+(Id., at 2).   On November 22, 2023, the DOJ filed its motion for summary judgment, along with a 
+statement of facts and a brief in support (Dkt. Nos. 26; 27; 28).  On November 27, 2023, the DOJ 
+filed a motion for leave to file a supplemental declaration for ex parte in camera review, seeking 
+to provide the Court with additional information to demonstrate that the DOJ met its burden under 
+the FOIA (Dkt. No. 32).  On March 29, 2024, Mr. Holt filed his response in opposition to the 
+motion for summary judgment, statement of materially disputed facts, and response to the DOJ’s 
+motion for leave to file supplemental declaration for ex parte in camera review (Dkt. Nos. 37; 38; 
+39).  The Court granted the DOJ’s request for leave to file a supplemental declaration for ex parte 
+
+in camera review (Dkt. No. 41).                                           
+     A.   Factual Background                                         
+Pursuant to Rule 56.1 of the Local Rules of the United States District Court for the Eastern 
+and Western Districts of Arkansas, the DOJ filed a statement of undisputed facts along with its 
+motion for summary judgment (Dkt. No. 27).  Under Rule 56.1, all material facts set forth in the 
+statement filed by the moving party shall be deemed admitted unless controverted by the statement 
+filed by the non-moving party.  Failure to support or address properly the moving party’s assertion 
+of fact can result in the fact being considered as undisputed for purposes of the motion.  Fed. R. 
+Civ. P. 56(e)(2).  Mr. Holt filed a statement of materially disputed facts (Dkt. No. 37).  The Court 
+understands Mr. Holt to agree with the facts as outlined in the DOJ’s statement of undisputed facts, 
+and incorporates the DOJ’s statement of undisputed facts, with the following exceptions:  
+
+The DOJ states:                                                      
+
+The FBI has determined that intelligence sources and methods would be revealed 
+if any of the withheld information is disclosed to plaintiff.  Id. ¶ 49.  Accordingly, 
+information was withheld in part from documents identified as FBI (22-CV-065)-
+224, 230, 232, 245-53, 290-93, 300-04, 386-87.  See Index, Exhibit Q to Seidel 
+Decl., Ex. 1.                                                        
+
+(Dkt. No. 27, ¶ 46).  Mr. Holt replies:  “The intelligence sources and methods exemption claimed 
+by the Defendant far exceed that allowed by Congress and the FOIA.  Further, this exemption is 
+null and void due to Plaintiff’s knowledge of these sources.”  (Dkt. No. 38, at 1–2 (citing Dkt. No. 
+27, ¶ 46)).                                                               
+The DOJ states:                                                      
+
+In  Exemption  Category  (b)(5)-1,  the  FBI  protected  privileged,  deliberative 
+information on four pages.  Id. ¶ 53.  The deliberative process privilege protects the 
+internal deliberations of the government by insulating recommendations, analyses, 
+opinions,  and  other  non-factual  information  comprising  the  decision-making 
+process.  Id.  In turn, Exemption 5 allows for the withholding of such privileged 
+material – i.e., material that contains, or was prepared in connection with the 
+formulation of, opinions, advice, evaluations, deliberations, policies, proposals, 
+conclusions, or recommendations.  Id.  The privilege also protects records and 
+information that if disclosed, would reveal the agency’s collection of multitudinous 
+facts, and the sorting, evaluation, and analysis of those facts in order to make 
+recommendations or reach a final agency decision.  Id.  Exemption 5, when asserted 
+in  conjunction  with  the  deliberative  process  privilege,  is  predicated  on  the 
+recognition that release of this privileged information would stifle the agency’s 
+decision-making process.  Id.  Furthermore, exempting such documents from 
+disclosure also protects against public confusion that might result from preliminary 
+disclosure of opinions and information that do not, in fact, reflect the final views of 
+the FBI.  Id.  The exemption and privilege together protect not only documents but 
+also the integrity of the deliberative process itself where exposure of the process 
+would result in harm.  Id.  The FBI invokes Exemption 5 and the deliberative 
+process privilege because FBI employees would hesitate to offer their candid and 
+conscientious opinions to supervisors or coworkers if they knew that their opinions 
+of the moment might be made a matter of public record at some future date, and 
+because  such  self-censorship  would,  in  turn,  degrade  the  quality  of  agency 
+decisions by depriving the decision-makers of fully-explored options developed 
+from robust debate.  Id.                                             
+
+(Dkt. No. 27, ¶ 49).  Mr. Holt responds:  “Exemption 5 was wrongly applied to Plaintiff pursuant 
+to the deliberative process privilege.”  (Dkt. No. 38, at 2) (citing Dkt. No. 27, ¶ 49)). 
+The DOJ states:                                                      
+
+The  FBI  relied  on  Exemption  5  and  the  deliberative  process  privilege,  in 
+conjunction with attorney-client privilege to protect the opinion of a DOJ Assistant 
+United States Attorney (“AUSA”), and the associated discussion between the 
+AUSA and the investigative FBI SA.  Id. ¶ 54.  This opinion and discussion 
+reflected intra-agency deliberations prior to reaching a final agency decision.  Id.  
+The FBI also relied on Exemption 5 and the [sic] to protect deliberative draft 
+investigative interview notes.  Id.  The draft interview notes reflected deliberations 
+integral to reaching final agency decisions regarding interview documentation.  Id.  
+Additionally, in compliance with the FOIA Improvement Act of 2016, this material 
+was created less than 25 years before the submission of plaintiff’s request.  Id. 
+
+(Dkt. No. 27, ¶ 50).  Mr. Holt responds:  “Exemption 5 was wrongly applied to Plaintiff pursuant 
+to the attorney-client privilege.” (Dkt. No. 38, at 2) (citing Dkt. No. 27, ¶ 50)). 
+The DOJ states:                                                      
+
+The FBI protected a confidential communication between the FBI and DOJ counsel 
+and an FBI employee (their client), that reflect the seeking and providing of legal 
+advice.  Id. ¶ 60.  Specifically, the FBI withheld the opinion of a DOJ AUSA and 
+the associated discussion between the AUSA and the investigative FBI [Special 
+Agent (“SA”)] regarding plaintiff’s sentence and parole.  Id.  The communications 
+between clients and attorneys were made in confidence, were not shared with or 
+circulated to individuals outside the attorney-client relationship, and were made for 
+the purpose of securing legal advice in relation to government legal positions.  Id.  
+Release of this information would call into question the FBI’s commitment to 
+withhold confidential information shared between agency clients and attorneys and 
+could dissuade agency attorneys and clients from fully sharing such information, 
+and  endanger  agency  attorneys’  ability  to  provide  the  best  possible  legal 
+representation of their clients.  Id.  Furthermore, it would provide advantage to 
+individuals seeking legal action against the government and/or those targeted for 
+prosecution by the government.  Id.  It would provide information traditionally 
+privileged in a legal context and disrupt the adversarial process of litigation by 
+providing  access  to  information  related  to  the  government’s  potential  legal 
+strategies regarding sentencing and parole.  Id.  Accordingly, the FBI properly 
+withheld these privileged communications pursuant to Exemption 5.  Id.  
+
+(Dkt. No. 27, ¶ 53).  Mr. Holt responds:  “Defendant has not shown that any legal counsel was 
+provided to any specific client.  The attorney and client were never identified.” (Dkt. No. 38, at 2) 
+(citing Dkt. No. 27, ¶ 53)).                                              
+The DOJ states:                                                      
+
+Before an agency can invoke any of the harms enumerated in Exemption (b)(7), 
+such as the unwarranted invasion of personal privacy, it must first demonstrate that 
+the records or information at issue were compiled for law enforcement purposes.  
+Id. ¶ 61.  Pursuant to 28 USC §§ 533, 534, and Executive Order 12,333 as 
+implemented by the Attorney General’s Guidelines for Domestic FBI Operations 
+(AGG-DOM) and 28 CFR § 0.85, the FBI is the primary investigative agency of 
+the federal government with authority and responsibility to investigate all violations 
+of federal law not exclusively assigned to another agency, to conduct investigations 
+and activities to protect the United States and its people from terrorism and threats 
+to national security, and further the foreign intelligence objectives of the United 
+States.  Id.  Under this investigative authority, the responsive records herein were 
+compiled  to  document  the  FBI’s  investigation  of  Gregory  Houston  Holt  for 
+potential violations of terrorist statutes.  Id.   Considering these records were 
+compiled to document the FBI’s investigation of possible bomb threats to military 
+recruiting stations and a police station, and a plot to harm United States government 
+officials, the FBI determined they were compiled for law enforcement purposes.  
+Id.                                                                  
+
+(Dkt. No. 27, ¶ 55).  Mr. Holt responds:  “Exemptions 7(C) and 7(E) were wrongly applied 
+to the Plaintiff.” (Dkt. No. 38, at 2) (citing Dkt. No. 27, ¶ 55)).       
+Finally, Mr. Holt further states that the DOJ “has not turned over the e-mail sought” 
+and that he “believes that the facts in dispute are the policies and practices of the FBI.”  (Id. 
+at 3).                                                                    
+     B.   Legal Standard                                             
+Summary judgment is appropriate if there is no genuine issue of material fact for trial.  
+UnitedHealth Grp. Inc. v. Exec. Risk Specialty Ins. Co., 870 F.3d 856, 861 (8th Cir. 2017) (citing 
+Fed. R. Civ. P. 56).  Summary judgment is proper if the evidence, when viewed in the light most 
+favorable to the nonmoving party, shows that there is no genuine issue of material fact and that the 
+defendant is entitled to entry of judgment as a matter of law.  Celotex Corp. v. Catrett, 477 U.S. 
+317, 322 (1986).  “In ruling on a motion for summary judgment ‘[t]he district court must base the 
+determination regarding the presence or absence of a material issue of factual dispute on evidence 
+that will be admissible at trial.’”  Tuttle v. Lorillard Tobacco Co., 377 F.3d 917, 923-24 (8th Cir. 
+2004) (internal citations omitted).  “Where the record taken as a whole could not lead a rational 
+trier of fact to find for the non-moving party, there is no genuine issue for trial.”  Johnson Reg’l 
+Med. Ctr. v. Halterman, 867 F.3d 1013, 1016 (8th Cir. 2017) (quoting Matsushita Elec. Indus. Co. 
+v. Zenith Radio Corp., 475 U.S. 574, 587 (1986)).  A factual dispute is genuine if the evidence 
+could cause a reasonable jury to return a verdict for either party.  Miner v. Local 373, 513 F.3d 
+854, 860 (8th Cir. 2008).  “The mere existence of a factual dispute is insufficient alone to bar 
+summary judgment; rather, the dispute must be outcome determinative under the prevailing law.”  
+Holloway v. Pigman, 884 F.2d 365, 366 (8th Cir. 1989) (citation omitted).   
+
+However, parties opposing a summary judgment motion may not rest merely upon the 
+allegations in their pleadings.  Buford v. Tremayne, 747 F.2d 445, 447 (8th Cir. 1984).  The initial 
+burden is on the moving party to demonstrate the absence of a genuine issue of material fact.  
+Celotex Corp., 477 U.S. at 323.  The burden then shifts to the nonmoving party to establish that 
+there is a genuine issue to be determined at trial.  Prudential Ins. Co. v. Hinkel, 121 F.3d 364, 366 
+(8th Cir. 2008), cert. denied, 522 U.S. 1048 (1998).  “The evidence of the non-movant is to be 
+believed, and all justifiable inferences are to be drawn in his favor.”  Anderson v. Liberty Lobby, 
+Inc., 477 U.S. 242, 255 (1986) (citation omitted).                        
+     C.   Analysis                                                   
+
+In a FOIA case, summary judgment is available to a defendant agency where “the agency 
+proves that it has fully discharged its obligations under FOIA, after the underlying facts and the 
+inferences to be drawn from them are construed in the light most favorable to the FOIA requester.”  
+Miller v. U.S. Dep’t of State, 779 F.2d 1378, 1382 (8th Cir.1985).  An agency “must prove that 
+each document that falls within the class requested either has been produced, is unidentifiable, or 
+is wholly exempt from the Act’s inspection requirements.”  Id. at 1382–83 (quoting Nat’l Cable 
+Television Ass’n, Inc. v. F. C. C., 479 F.2d 183, 186 (D.C. Cir. 1973)).  “The adequacy of an 
+agency’s search for requested documents is judged by a standard of reasonableness, i.e., ‘the 
+agency must show beyond material doubt. . . that it has conducted a search reasonably calculated 
+to uncover all relevant documents.’”  Id. at 1383 (quoting Weisberg v. U.S. Dep’t of Just., 705 F.2d 
+1344, 1351 (D.C. Cir. 1983)).  The reasonableness of the search can be proved through affidavits 
+of agency officials that are detailed, nonconclusory, and submitted in good faith.  Id.  Moreover, 
+it was the intent of Congress that such agency affidavits “be accorded substantial weight in 
+national-security cases.”  Id.                                            
+
+Vaughn indices can be used to help determine whether an agency has met its burden.  
+Missouri Coal. for Env’t Found. v. U.S. Army Corps of Engineers, 542 F.3d 1204, 1209 (8th Cir. 
+2008).  A Vaughn index’s purpose is twofold.  “First, to ensure an ‘effectively helpless’ party’s 
+right to information ‘is not submerged beneath governmental obfuscation and mischaracterization’ 
+and second, to ‘permit the court system effectively and efficiently to evaluate the factual nature of 
+disputed information.’”  Id. (quoting Vaughn v. Rosen, 484 F.2d 820, 826 (D.C. Cir. 1973)).  An 
+adequate Vaughn index:                                                    
+provides a specific factual description of each document sought by the FOIA 
+requester.  Specifically, such an index includes a general description of each 
+document’s contents, including information about the document’s creation, such as 
+date,  time,  and  place.    For  each  document,  the  exemption  claimed  by  the 
+government is identified, and an explanation as to why the exemption applies to the 
+document in question is provided.                                    
+
+Missouri Coal, 542 F.3d at 1209–10.  An index can be considered in conjunction with affidavits 
+to detail why each purported exemption applies to the documents in question.  Id. at 1210.  
+Mr. Holt emphasizes one document, an email purportedly sent to STTG Higgins, and Mr. 
+Holt seeks justification for why the email was not disclosed pursuant to his FOIA requests (Dkt. 
+No. 27-3, at 112-13).  However, that is not the standard for an agency seeking summary judgment 
+in a FOIA case.  An agency must show that its search for the documents was reasonably calculated 
+to locate the requested documents.  Miller, 779 F.2d at 1383 (quoting Weisberg, 705 F.2d at 1351).  
+In support of its argument that it conducted an adequate search for the documents, the FBI 
+submitted  an  exemption  application  index  which  includes  a  summary  of  FOIA  exemption 
+justification categories, a description of FBI document types, a description of each document, the 
+FOIA exemption claimed, if any, and whether the document was disclosed (Dkt. No. 27-3).  
+Additionally, the FBI offered the declaration of Michael G. Seidel, the section chief of the 
+record/information dissemination sections (“RIDS”), information management division (“IMD”), 
+
+of the FBI in which Mr. Seidel provides the FBI’s justification for withholding the requested 
+information under the Privacy Act and FOIA exemptions (Dkt. No. 27-3, ¶¶ 1, 4).  The Court 
+addresses each of the FBI’s claimed FOIA exemptions and Mr. Holt’s corresponding objections 
+in turn.                                                                  
+          1.   Privacy Act Exemption (j)(2)                          
+The Privacy Act exempts the disclosure of records maintained by an agency that has the 
+principal function of law enforcement.  5 U.S.C. § 552(a)(j)(2).  The FBI is an agency that is 
+required  “to  investigate  violations  of  law  within  its  investigative  jurisdiction  and  collect[] 
+information from a wide variety of sources.”  63 Fed. Reg. 8671, 8684 (Feb. 20, 1998).  The FBI 
+
+maintains its records in the Central Records System (“CRS”) (Dkt. No. 28, at 9).  The FBI’s law 
+enforcement records that are maintained in its CRS are exempted from disclosure under the 
+Privacy Act.  63 Fed. Reg. 8671, 8684 (Feb. 20, 1998).                    
+The FBI located Mr. Holt’s requested records through a search of its CRS (Dkt. No. 27-3, 
+¶ 30).  In accordance with the records being exempt from disclosure under the Privacy Act, the 
+FBI withheld the requested documents (Id.).  Examining the record evidence with all reasonable 
+inferences drawn in favor of Mr. Holt, the Court concludes that the FBI properly denied Mr. Holt’s 
+request for documents under the Privacy Act.                              
+          2.   FOIA Exemption 1                                      
+FOIA exemption 1 exempts the disclosure of records that are “specifically authorized under 
+criteria established by an Executive order to be kept secret in the interest of national defense or 
+foreign policy and are in fact properly classified pursuant to such Executive order.”  5 U.S.C. § 
+552(b)(1)(A)-(B).  Executive Order (E.O.) 13526 is the applicable executive order governing 
+national security, and it outlines a “uniform system for classifying, safeguarding, and declassifying 
+
+national security information, including information relating to defense against transnational 
+terrorism.”  Exec. Order No. 13526, 75 Fed. Reg. 707 (Dec. 29, 2009).     
+Pursuant to the Executive Order:                                     
+Section 1.1. Classification Standards. (a) Information may be originally classified 
+under the terms of this order only if all of the following conditions are met: 
+
+(1) an original classification authority is classifying the information; 
+
+(2) the information is owned by, produced by or for, or is under the control of the 
+United States Government;                                            
+
+(3) the information falls within one or more of the categories of information listed 
+in section 1.4 of this order; and                                    
+
+(4) the original classification authority determines that the unauthorized disclosure 
+of the information reasonably could be expected to result in damage to the national 
+security, which includes defense against transnational terrorism, and the original 
+classification authority is able to identify or describe the damage. 
+
+Exec. Order No. 13526, 75 Fed. Reg. 707 (December 29, 2009).  In FOIA cases involving issues 
+of national security, courts defer to the expertise of the agency.  Larson v. Dep’t of State, 565 F.3d 
+857, 865 (D.C. Cir. 2009).  “If an agency’s statements supporting exemption contain reasonable 
+specificity of detail as to demonstrate that the withheld information logically falls within the 
+claimed exemption and evidence in the record does not suggest otherwise” then courts should not 
+question the agency’s expertise.  Id.                                     
+Mr. Holt claims that the FBI used exemption 1 to withhold the e-mail that he seeks and that 
+the FBI’s purported justification for the exemption is “conclusory and it leaves this court and the 
+plaintiffs to speculate as to what national security interests are implicated by the email.”  (Dkt. No. 
+37, at 84–85).  The DOJ maintains that the FBI did not use exemption 1 to withhold the e-mail Mr. 
+Holt seeks; rather, the FBI withheld classified information on two electronic communications 
+
+concerning detailed intelligence activity (Dkt. No. 45, at 10).           
+Mr. Seidel determined that the information that the FBI withheld under exemption 1 “is 
+under the control of the United States government, is classified and requires a classification 
+marking at the ‘Secret’ level since the unauthorized disclosure of this information reasonably could 
+be expected to cause damage, serious damage, or exceptionally grave damage to national security.”  
+(Dkt. No. 27-3, ¶ 38) (citing Exec. Order No. 13526, 75 Fed. Reg. 707 (December 29, 2009)).  Mr. 
+Seidel further noted that the records discussed information pertaining to the following categories 
+that are protected by the Executive Order:  (1) intelligence activities (including covert action); (2) 
+intelligence sources or methods; or (3) cryptology (Id., ¶ 40).  Specifically, Mr. Seidel identified 
+
+that the requested records contained information “concerning the character and title of the case for 
+a specific type of intelligence activity directed at specific targets of national security interest” and 
+the “detailed intelligence activity information gathered or compiled by the FBI on a specific 
+individual organization of national security interest.”  (Dkt. No. 27-3, ¶¶ 44–45).  Mr. Seidel 
+concluded  that  disclosure  of  this  information  would  enable  hostile  entities  to  “develop 
+countermeasures  which  would,  in  turn,  severely  disrupt  the  FBI’s  intelligence  gathering 
+capabilities.”  (Id., ¶ 42).                                              
+In sum, the FBI outlined in detail why Executive Order 13526 applies, how the requested 
+information was classified, and the harm that disclosure of the information would pose to national 
+security.  Mr. Holt bases his argument on the wrongful application of this exemption to a specific 
+document, an email, but in the absence of any offered evidence, Mr. Holt has not established that 
+there is a genuine issue of material fact regarding how the FBI applied exemption 1 to the requested 
+information.  The FBI properly applied exemption 1.                       
+          3.   FOIA Exemption 3                                      
+
+Under exemption 3, records are exempt from disclosure if they are specifically exempted 
+from disclosure by another statute, other than the FOIA, if that statute “requires that the matters 
+be withheld from the public in such a manner as to leave no discretion on the issue; or establishes 
+particular criteria for withholding or refers to particular types of matters to be withheld.”  5 U.S.C. 
+§ 552(b)(3).  Moreover, statutes enacted after the OPEN FOIA Act of 2009 must specifically cite 
+to this paragraph of the FOIA exemptions to qualify under exemption 3.  5 U.S.C. § 552(b)(3).  
+Determining whether exemption 3 can be invoked requires a two-pronged analysis.  C.I.A. v. Sims, 
+471 U.S. 159, 167 (1985).  First, Courts determine whether the statute in question is subject to a 
+statutory exemption within the meaning of exemption 3.  Id.  Second, courts consider whether the 
+
+information requested falls under the statute.  Id.                       
+The FBI asserts that, pursuant to exemption 3, it can withhold information under the 
+National Security Act of 1947 (“NSA”), as amended by the Intelligence Reform and Terrorism 
+Prevention Act of 2004 (“IRTPA”) (Dkt. No. 27-3, ¶ 47).  Mr. Holt disputes the applicability of 
+the Act claiming that the FBI does not provide any dates or time periods of the documents and that 
+he “does not believe that any of the documents contain classified information or that they qualify 
+under the National Security Act.”  (Dkt. No. 37, at 89).                  
+Mr. Holt’s argument fails because the Act does not require the agency to provide the time 
+period of the documents.  The Act provides that the Director of National Intelligence (“DNI”) 
+“shall protect, and shall establish and enforce policies to protect, intelligence sources and methods 
+from unauthorized disclosure.”  50 U.S.C. § 3024(i)(1).  Moreover, the Act requires that the DNI 
+establish and implement requirements for classification, access and dissemination, and preparation 
+of intelligence products.  50 U.S.C. § 3024(i)(1).  With this authority, the DNI promulgated the 
+Intelligence  Community  Directive  700  that  requires  the  intelligence  community  to  protect 
+
+“national intelligence and intelligence sources and methods and activities from unauthorized 
+disclosure.”  Director of National Intelligence Directive 700, Intelligence Community Directive 
+(2012).  The FBI is one of the agencies comprising the intelligence community, and thus, pursuant 
+to the DNI’s directive, it must protect intelligence sources (Dkt. No. 27-3, ¶ 48).  The FBI claims 
+that “intelligence sources and methods would be revealed if any of the withheld information is 
+disclosed.”  (Id., ¶ 49).  Specifically, the FBI’s Vaughn index identifies the documents, the page 
+number, and whether the document was released or withheld pursuant to exemption 3.  Moreover, 
+the FBI’s index justifies withholding such records under exemption 3 for the “[p]rotection of 
+[i]ntelligence [s]ources] and [m]ethods” pursuant to 50 U.S.C. § 3024(i)(1).  Because 50 U.S.C. § 
+
+3024(i)(1)  constitutes  a  statutory  exemption  to  disclosure  under  exemption  3,  because  the 
+information sought is protected by the statute, and because Mr. Holt has failed to establish a 
+disputed genuine issue of material fact regarding the applicability of this Act, the FBI has properly 
+invoked exemption 3.                                                      
+          4.   FOIA Exemption 5                                      
+The FOIA exempts the disclosure of “inter-agency or intra-agency memorandums or letters 
+that would not be available by law to a party other than an agency in litigation with the agency, 
+provided that the deliberative process privilege shall not apply to records created 25 years or more 
+before the date on which the records were requested.”  5 U.S.C. § 552(b)(5).  “To qualify, [for the 
+exemption] a document must thus satisfy two conditions:  its source must be a Government agency, 
+and it must fall within the ambit of a privilege against discovery under judicial standards that would 
+govern litigation against the agency that holds it.”  Dep’t of Interior v. Klamath Water Users 
+Protective Ass’n, 532 U.S. 1, 8 (2001).                                   
+Agency means “‘each authority of the Government of the United States,’ § 551(1), and 
+
+‘includes any executive department, military department, Government corporation, Government 
+controlled corporation, or other establishment in the executive branch of the Government. . . , or 
+any independent regulatory agency.’”  Id. at 9 (quoting 5 U.S.C. § 552(f)).  Here, the records 
+withheld under exemption 5 contain documents prepared by FBI Special Agent (“SA”) and 
+communications between the SA and DOJ AUSA, both of whom are employed by government 
+agencies (Dkt. No. 27, ¶ 50).    Examining the record evidence with all reasonable inferences drawn 
+in favor of Mr. Holt, the Court concludes that the FBI established that the source of the records in 
+question is a government agency.                                          
+               i.   Deliberative Process Privilege                   
+
+Under exemption 5, the deliberative process privilege “‘protect[s] the decisionmaking 
+processes of government agencies’ and ‘encourage[s] the frank discussion of legal and policy 
+issues’ by ensuring that agencies are not ‘forced to operate in a fishbowl.’”  Mapother v. Dep’t of 
+Just., 3 F.3d 1533, 1537 (D.C. Cir. 1993) (quoting Wolfe v. Dep’t of Health & Hum. Servs., 839 
+F.2d 768, 773 (D.C. Cir. 1988)).  This privilege protects pre-decisional and deliberative materials.  
+Id.  The FBI claims that the records pertaining to a deliberative discussion between the FBI SA 
+and an AUSA were pre-decisional because the discussion was about “legal strategies regarding 
+Plaintiff’s violations, sentence, and parole” and because the information does not reflect the FBI’s 
+final decision (Dkt. No. 27-3, ¶ 55).  The FBI further withheld two sets of handwritten notes by an 
+FBI SA under the deliberative process privilege (Dkt. No. 28, at 18).  The FBI argues that the notes 
+“include facts that are intertwined with the SA’s impressions, thoughts, and judgments.”  Id.  
+Moreover, it claims such notes are deliberative and pre-decisional because “they precede the final 
+writeup formally memorializing an interview.”  (Dkt. No. 45, at 5).  Mr. Holt does not offer an 
+argument as to why the discussion between the SA and AUSA and the handwritten notes are not 
+
+exempt from disclosure under the deliberative process privilege.  Because the record undisputably 
+reflects that the SA and AUSA’s discussion about Mr. Holt and handwritten notes included the 
+agency’s legal strategies regarding Mr. Holt and were not the agency’s final positions, a reasonable 
+jury could conclude that the FBI properly invoked the deliberative process privilege.  
+               ii.  Attorney Client Privilege                        
+The FOIA exemption 5 applies to all civil discovery privileges including the attorney-client 
+privilege.  Fams. for Freedom v. U.S. Customs & Border Prot., 837 F. Supp. 2d 287, 293 (S.D.N.Y. 
+2011).  The privilege protects confidential communications made for the purpose of receiving legal 
+advice or services.  Id.  “In the governmental context, the ‘client’ may be the agency and the 
+
+attorney may be an agency lawyer.”  Tax Analysts v. I.R.S., 117 F.3d 607, 618 (D.C. Cir. 1997).  
+The FBI claims that there was an attorney-client relationship between the DOJ AUSA and the FBI 
+SA when they discussed Mr. Holt’s sentence and parole in confidence (Dkt. No. 27, ¶ 53).  Mr. 
+Holt’s argument that the attorney-client privilege does not apply because the FBI did not identify 
+who the client is and has not maintained that the records were confidential is unavailing (Dkt. No. 
+37, at 44–45).  In the absence of any evidence to the contrary, the record reflects that the FBI 
+employee was the client and the AUSA the attorney; further, it reflects that the FBI SA and AUSA 
+discussed the information at issue in confidence (Dkt. No. 27-3, ¶ 60).  Therefore, the FBI properly 
+withheld the requested documents under the attorney-client privilege.     
+          5.   FOIA Exemptions 6 And 7(C)1                           
+Under the FOIA, “personnel and medical files and similar files” are exempt from disclosure 
+when such disclosure would “constitute a clearly unwarranted invasion of personal privacy.”  5 
+U.S.C. § 552(b)(6).  Similarly, the FOIA exempts the disclosure of “records or information 
+compiled for law enforcement purposes” when such disclosure “could reasonably be expected to 
+
+constitute an unwarranted invasion of personal privacy.”  5 U.S.C. § 552(b)(7)(C).   
+ As a threshold matter, to invoke any exemption under 7, the agency bears the burden to 
+establish that the sought after information was “compiled for law enforcement purposes.”  5 U.S.C. 
+§ 552(b)(7).  “Courts determine whether the agency met its burden by review[ing] the adequacy 
+of the affidavits and other evidence presented by the Government in support of its position.”  
+Xanthopoulos v. Internal Revenue Serv., 35 F.4th 1135, 1138 (8th Cir. 2022) (internal quotations 
+omitted).  The FBI contends that the records requested were compiled, pursuant to the FBI’s 
+investigatory authority, to document the FBI’s investigation of Mr. Holt for “possible bomb threats 
+to military recruiting stations and a police station, and a plot to harm United States government 
+
+officials.”  (Dkt. No. 27-3, ¶ 61).  In response, Mr. Holt claims that these records were released to 
+other agencies that, in turn, released the same documents to Mr. Holt through a FOIA request, but 
+he does not cite to any supporting evidence for this claim (Dkt. No. 37, at 53–54).  Even if such 
+records were released to Mr. Holt by other agencies, this does not negate the fact that the records 
+in  question  were  compiled  for  law  enforcement  purposes  as  required  by  exemption  7(C). 
+Therefore, examining the record evidence with all reasonable inferences drawn in favor of Mr. 
+
+
+
+1  The FBI asserts that it is standard agency practice to assert exemptions 6 and 7(C) 
+together, given that a similar analysis applies to the two.  The Court follows suit in analyzing 
+exemptions 6 and 7(C) in conjunction.                                     
+Holt, the Court concludes that the FBI has met its burden that the records in question were 
+compiled for law enforcement purposes.                                    
+ Additionally,  exemption  7(C)  mandates  the  protection  of  citizens’  privacy  against 
+uncontrolled disclosure.  Nat’l Archives & Recs. Admin. v. Favish, 541 U.S. 157, 172 (2004).  The 
+information the FBI withheld under exemptions 6(C) and 7(C) includes “personal information 
+
+about FBI employees, third parties interviewed by FBI, people of interest in the investigation, 
+employees of other agencies involved in the investigation, victims, and local and state government 
+professional staff.”  (Dkt. No. 45, at 6) (citing Dkt. 27-3, ¶¶ 62–77).  The FBI argues that it withheld 
+the requested information because disclosure would constitute an unwarranted invasion of personal 
+privacy and because there is not a public interest that would outweigh the third parties’ privacy 
+interest (Dkt. No. 45, at 6).  The FBI further posits that it “scrutinized [every piece of information 
+requested] to determine the nature and strength of the privacy interest of every individual whose 
+name and/or identifying information appears in the documents at issue.”  (Dkt. No. 27-3, ¶ 64).   
+Once privacy concerns are implicated, courts must balance these privacy interests against 
+
+the public interest in disclosure.  Nat’l Archives, 541 U.S. at 172.      
+Where  the  privacy  concerns  addressed  by  Exemption  7(C)  are  present,  the 
+exemption requires the person requesting the information to establish a sufficient 
+reason for the disclosure.  First, the citizen must show that the public interest sought 
+to be advanced is a significant one, an interest more specific than having the 
+information for its own sake.  Second, the citizen must show the information is 
+likely to advance that interest.  Otherwise, the invasion of privacy is unwarranted. 
+
+Id.  “‘Public interest’ in the context of Exemption 7(C) means an interest in [o]fficial information 
+that sheds light on an agency’s performance of its statutory duties, and contribute[s] significantly 
+to public understanding of the operations or activities of the government.”  Peltier v. F.B.I., 563 
+F.3d 754, 762–63 (8th Cir. 2009) (internal citations omitted).  “[A] prisoner may not override 
+legitimate privacy interests recognized in Exemption 7(C) simply by pointing to the public’s 
+interest in fair criminal trials or the even-handed administration of justice.”  Id. at 764. 
+Mr. Holt claims that there is a public interest in disclosure because “Plaintiff has been 
+tarred and feather by the Defendant as a ‘terrorist’ simply for espousing unpopular ideas.”  (Dkt. 
+No. 37, at 57).  Mr. Holt further claims that he believes he has a right to challenge the credibility 
+
+of any third parties who cooperated in the investigation and the identity of the agent from the 
+Louisiana FBI field office who supplied the information that resulted in Mr. Holt being placed in 
+an STTG file (Id. at 58–59).                                              
+The FBI claims that Mr. Holt does not assert any public interest for the information, but 
+rather, he requests it for personal reasons (Dkt. No. 45, at 7).   Examining the record evidence with 
+all reasonable inferences drawn in favor of Mr. Holt, the Court agrees with the FBI that Mr. Holt 
+does not advance a public interest in disclosure sufficient to satisfy that required by the exemption.  
+Therefore, Mr. Holt has not adequately asserted a public interest that outweighs the privacy 
+interests of the individuals whose personal information is contained in the documents at issue 
+
+sufficient to warrant disclosure.                                         
+          6.   FOIA Exemption 7(D)                                   
+The FOIA exempts the disclosure of records that “could reasonably be expected to disclose 
+the identity of a confidential source.”  5 U.S.C. § 552(b)(7)(D).  A source is “confidential” if the 
+source  disclosed  the  information  to  the  agency  under  an  express  or  inferred  assurance  of 
+confidentiality.  Williams v. F.B.I., 69 F.3d 1155, 1159 (D.C. Cir. 1995).  The FBI invoked 
+exemption 7(D) to withhold the disclosure of documents that contain the identity and information 
+provided by three categories of confidential sources:  (1) third parties who had an inferred grant of 
+confidentiality; (2) third parties who had an express grant of confidentiality; and (3) local law 
+enforcement personnel who had an implied assurance of confidentiality (Dkt. No. 27-3, ¶¶ 81, 84, 
+87).  The FBI argues that assuring confidentiality to all the categories of informants is important 
+to the Agency’s functioning because “when the identity of one source is revealed, that revelation 
+has a chilling effect on the activities and cooperation of other sources.” (Dkt. No. 27-3, at 40).  
+Mr. Holt claims that the FBI wrongly applied exemption 7(D) “to the email at issue” 
+
+because the FBI’s “Vaughn index does not state with specificity this exemption regarding the e-
+mail.”  (Dkt. No. 37, at 62–63).  A Vaughn index is not required but can be used to determine the 
+reasonableness of an agency’s claimed FOIA exemptions.  Missouri Coal, 542 F.3d at 1209.  
+Further, an agency’s Vaughn index can be considered in tandem with affidavits from agency 
+officials detailing a description of the documents at issue and the reason one of the FOIA 
+exemptions applies.  Id.  Here, the FBI provided a Vaughn index outlining the exemption 
+justification categories, a description of FBI document types, a description of each document, the 
+FOIA exemption claimed, if any, and whether or not the document was disclosed (Dkt. No. 27-3, 
+at 130–141).  Additionally, the FBI provided the affidavit of Mr. Seidel who explained in detail 
+
+the purported reasons the FBI exempted the records from disclosure under exemption 7(D) (Dkt. 
+No 27-3, ¶¶ 79–88).  Examining the record evidence with all reasonable inferences drawn in favor 
+of Mr. Holt, the Court concludes that the FBI properly withheld documents under exemption 7(D).   
+          7.   FOIA Exemption 7(E)                                   
+The FOIA exempts disclosure of “records or information compiled for law enforcement 
+purposes” to the extent that the production of such records “would disclose techniques and 
+procedures for law enforcement investigations or prosecutions, or would disclose guidelines for 
+law enforcement investigations or prosecutions if such disclosure could reasonably be expected to 
+risk circumvention of the law.”  5 U.S.C. § 552(b)(7)(E).  The agency has the burden to show that 
+the material was compiled for law enforcement purposes.  “If the agency’s description of the 
+withheld material ‘adequately states its grounds for nondisclosure, and if those grounds are 
+reasonable  and  consistent  with  the  applicable  law,  the  district  court  should  uphold  the 
+Government’s position.’”  Xanthopoulos, 35 F.4th at 1138 (quoting Cox v. U.S. Dep’t of Just., 576 
+F.2d 1302 (8th Cir. 1978)).                                               
+
+The FBI asserts that it withheld documents under exemption 7(E), (Dkt. No. 27-3, ¶¶ 89-
+109), “to protect the integrity and effectiveness of FBI’s investigative techniques so criminals 
+cannot discover them and use them to circumvent investigation or avoid detection.”  (Dkt. No. 45, 
+at 3–4).  The information withheld under this exemption includes “FBI file numbers, identities of 
+squads and divisions, secure fax and telephone numbers, methods of information collection and 
+analysis, investigative techniques and capabilities, non-public coordination with other government 
+agencies, and criteria used to determine source suitability.”  (Id., at 3 (see Dkt. No. 27-3, ¶¶ 93, 
+97, 99, 100–08)).  Mr. Holt contends that the FBI withheld content, including an email sent to 
+former STTG coordinator Jacob Higgins “that described the plaintiff as a ‘radicalized, jihadist,’” 
+
+that does not fall under the “specialized, non-public techniques or procedures requirement” of 7(E) 
+(Dkt. No. 37, at 28–29).  Mr. Holt further posits that “[a]lthough the FBI is a law enforcement 
+agency, not all FBI records are compiled for law enforcement purposes.” (Dkt. No. 37, at 31).  
+While the Court agrees that not all FBI records are compiled for law enforcement purposes, “there 
+is no reason to believe that the FBI would have compiled information regarding [Mr. Holt] outside 
+the context of a legitimate law-enforcement investigation.”  Roth v. U.S. Dep’t of Just., 642 F.3d 
+1161, 1173 (D.C. Cir. 2011).                                              
+Without any contrary record evidence cited by Mr. Holt, examining the record evidence 
+with all reasonable inferences drawn in favor of Mr. Holt, the Court concludes that the FBI met its 
+burden to demonstrate that disclosure of the documents claimed exempt under 7(E) would disclose 
+FBI techniques and procedures, and thus, the FBI properly withheld documents under exemption 
+7(E).                                                                     
+          8.   Glomar Response                                       
+“[A]n agency may issue a Glomar response, i.e., refuse to confirm or deny the existence or 
+
+nonexistence of responsive records if the particular FOIA exemption at issue would itself preclude 
+the acknowledgement of such documents.”  Elec. Priv. Info. Ctr. v. Nat’l Sec. Agency, 678 F.3d 
+926, 931 (D.C. Cir. 2012).  A Glomar response is appropriate when “‘to answer the FOIA inquiry 
+would cause harm cognizable under’ an applicable statutory exemption.”  Id. (quoting Wolf, 473 
+at 374).  Regarding Glomar responses, “courts may grant summary judgment on the basis of 
+agency affidavits that contain ‘reasonable specificity of detail rather than merely conclusory 
+statements, and if they are not called into question by contradictory evidence in the record or by 
+evidence of agency bad faith.’”  Id. (quoting Gardels v. C. I. A., 689 F.2d 1100, 1105 (D.C. Cir. 
+1982)).  The affidavit “must justify the Glomar response based on ‘general exemption review 
+
+standards established in non-Glomar cases.’”  Id.  “[A]n agency’s justification for invoking a FOIA 
+exemption is sufficient if it appears ‘logical’ or ‘plausible.’”  Larson, 565 F.3d at 862.  
+It is the FBI’s standard practice to issue a Glomar response, “regardless of whether 
+responsive records exist (i.e., including when the FBI does not possess responsive records)” to 
+maintain the effectiveness of using such responses (Dkt. No. 27-3, ¶ 115).  The FBI posits that 
+“[i]f the FBI invoked a Glomar response only when it possesses responsive records, the Glomar 
+response would be interpreted as an admission that responsive records exist.”  (Id., ¶ 118).  The 
+FBI  gave  Mr.  Holt  “its  standard  Glomar  response  concerning  unacknowledged  intelligence 
+records,  watch  list  records,  witness  security  program  records,  and  records  for  incarcerated 
+individuals advising that it can neither confirm nor deny the existence of such records pursuant to 
+FOIA Exemptions 1, 3, 7(D), and 7(F).”  (Dkt. No. 28, at 43–44; see also Dkt. No. 27-3, at 90–
+91).                                                                      
+Mr. Holt claims that the FBI’s Glomar response is unlawful because “acknowledging the 
+existence or non-existence of records would not logically or plausibly reveal the specific facts the 
+
+Defendants list” and that some of the documents in question are not confidential and have already 
+been released by other agencies (Dkt. No. 37, at 68).  Mr. Holt’s augment fails because, “[i]n light 
+of the substantial weight accorded agency assertions of potential harm” that could result by 
+disclosing records exempt under exemptions 1, 3, 7(D), and 7(F), the agency has put forth  
+plausible and logical justifications, as discussed previously, for invoking such exemptions.  See 
+Wolf, 473 F.3d at 376.  It follows, the agency’s Glomar response under those same exemptions is 
+adequate.                                                                 
+          9.   In Camera Review                                      
+The Eighth Circuit Court of Appeals has held that “in camera inspection should be limited 
+
+as it is ‘contrary to the traditional judicial role of deciding issues in an adversarial context upon 
+evidence openly produced in court.’”  Missouri Coal, at 1210 (citing Barney v. Internal Revenue 
+Serv., 618 F.2d 1268, 1272 (8th Cir. 1980)).  Even in instances when a party submits a “bare bones” 
+Vaughn index, courts do not hold in camera review if the Vaughn index is accompanied by 
+affidavits that adequately describe and provide support for the claimed exemptions.  Id.  “The court 
+is entitled to accept the credibility of the affidavits, so long as it has no reason to question the good 
+faith of the agency.”  Cox, 576 F.2d at 1312 (citing Weissman v. Cent. Intel. Agency, 565 F.2d 692, 
+698 (D.C. Cir. 1977)).                                                    
+ The FBI asserts that in camera review is not warranted because it adequately described and 
+supported its purported reasons for nondisclosure and because Mr. Holt has failed to point to any 
+instance of bad faith on the FBI’s part (Dkt. No. 45, at 12-13).  Mr. Holt relies on a Sixth Circuit 
+Court of Appeals case, Jones v. F.B.I., 41 F.3d 238 (6th Cir. 1994), to claim that in camera review 
+is warranted because the FBI acted in bad faith regarding the activities underlying the documents 
+at issue (Dkt. No. 37, at 98).  Specifically, Mr. Holt claims that his advocacy on behalf of Muslims 
+“brought him into disfavor with both federal and state law enforcement agencies.” (Dkt. No. 37, 
+at 101).  However, the Eighth Circuit did not apply the Jones reasoning, and did not require in 
+camera review, in a case where the plaintiff “point[ed] to nothing about the FBI’s response to the 
+instant FOIA requests that call[ed] into question the good faith of the agency.”  Peltier, at 761. 
+Because the FBI’s Vaughn index and supporting declarations adequately describe its reasons for 
+non-disclosure and because Mr. Holt does not provide any record evidence of the FBI acting in 
+bad faith, in camera review is not warranted. 
+ I.    Conclusion 
+ For these reasons, the Court grants the DOJ’s motion to extend time (Dkt. No. 22) and 
+grants the DOJ’s motion for summary judgment on Mr. Holt’s FOIA request claim (Dkt. No. 26). 
+After construing the underlying facts and the inferences to be drawn from them in the light most 
+favorable to the FOIA requester Mr. Holt, the Court concludes that the record evidence establishes 
+the DOJ has fully discharged its obligations under FOIA.  Mr. Holt has failed to present evidence 
+from which a jury might return a verdict in his favor on his FOIA claim. 
+ It is so ordered this 24th day of September, 2024. 
+                                    Kushn A  Palin 
+                                     Kristine G. Baker 
+                                     Chief United States District Judge 
+
+                                 23
+
+================================================================================
