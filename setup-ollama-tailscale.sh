@@ -186,7 +186,8 @@ fi
 if [[ -n "$PULL_MODELS" ]]; then
   bold "5/6  Pulling models"
   for _m in $PULL_MODELS; do
-    ollama pull "$_m"
+    info "pulling $_m"
+    ollama pull "$_m" || { info "WARNING: failed to pull $_m (continuing)"; }
   done
 else
   bold "5/6  Skipping model pull (PULL_MODELS is empty)"
