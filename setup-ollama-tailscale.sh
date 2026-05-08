@@ -14,7 +14,7 @@ set -euo pipefail
 OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfaces (Tailscale + LAN + localhost)
 OLLAMA_KEEP_ALIVE_VAL="${OLLAMA_KEEP_ALIVE_VAL:--1}"   # -1 = pin loaded model in memory forever
 OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resident at a time
-OLLAMA_VERSION="${OLLAMA_VERSION:-0.6.0}"              # exact ollama version to pin to. Set to "latest" (or "") to track upstream instead.
+OLLAMA_VERSION="${OLLAMA_VERSION:-0.23.2}"             # exact ollama version to pin to. Set to "latest" (or "") to track upstream instead.
 # Models to pull (space-separated; idempotent). Set to "" to skip all pulls.
 PULL_MODELS="${PULL_MODELS:-gemma4:31b-it-q8_0 gemma4:31b-mlx-bf16 gemma4:31b-it-q4_K_M gemma4:26b-mlx-bf16 gemma4:26b-a4b-it-q8_0 gemma4:26b-a4b-it-q4_K_M}"
 AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); 0 = restore stock pmset; both need sudo
