@@ -14,15 +14,16 @@ set -euo pipefail
 OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfaces (Tailscale + LAN + localhost)
 OLLAMA_KEEP_ALIVE_VAL="${OLLAMA_KEEP_ALIVE_VAL:--1}"   # -1 = pin loaded model in memory forever
 OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resident at a time
+OLLAMA_VERSION="${OLLAMA_VERSION:-0.23.2}"             # exact ollama version to pin to. Set to "latest" (or "") to track upstream instead.
 # Models to pull (space-separated; idempotent). Set to "" to skip all pulls.
 PULL_MODELS="${PULL_MODELS:-gemma4:31b-it-q8_0 gemma4:31b-mlx-bf16 gemma4:31b-it-q4_K_M gemma4:26b-mlx-bf16 gemma4:26b-a4b-it-q8_0 gemma4:26b-a4b-it-q4_K_M}"
-AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); needs sudo
+AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); 0 = restore stock pmset; both need sudo
 DISPLAY_SLEEP_MIN="${DISPLAY_SLEEP_MIN:-10}"  # blank the display after N minutes on AC (0 = never)
-LOCK_ON_SLEEP="${LOCK_ON_SLEEP:-1}"           # 1 = require password as soon as display sleeps
+LOCK_ON_SLEEP="${LOCK_ON_SLEEP:-1}"           # 1 = require password as soon as display sleeps; 0 = remove the override
 INSTALL_GUI="${INSTALL_GUI:-0}"               # 0 = CLI/server only (recommended); 1 = also install the Ollama menu-bar GUI app (cask)
-EXCLUDE_BACKUPS="${EXCLUDE_BACKUPS:-1}"       # 1 = skip Time Machine + Spotlight on ~/.ollama/models
-INSTALL_HEALTHCHECK="${INSTALL_HEALTHCHECK:-1}"  # 1 = LaunchAgent that probes /api/tags every 60s
-INSTALL_AUTOUPDATE="${INSTALL_AUTOUPDATE:-1}"    # 1 = enable macOS auto security updates + weekly brew upgrade
+EXCLUDE_BACKUPS="${EXCLUDE_BACKUPS:-1}"       # 1 = skip Time Machine + Spotlight on ~/.ollama/models; 0 = remove those exclusions
+INSTALL_HEALTHCHECK="${INSTALL_HEALTHCHECK:-1}"  # 1 = LaunchAgent that probes /api/tags every 60s; 0 = remove it if present
+INSTALL_AUTOUPDATE="${INSTALL_AUTOUPDATE:-1}"    # 1 = enable macOS auto security updates + weekly brew upgrade; 0 = disable both
 # -------------------------------------------------------------------------
 
 bold() { printf "\n\033[1m%s\033[0m\n" "$*"; }
@@ -33,11 +34,70 @@ if ! command -v brew >/dev/null 2>&1; then
   exit 1
 fi
 
-bold "1/6  Installing Ollama"
-if brew list --formula ollama >/dev/null 2>&1; then
-  info "formula (CLI/server) already installed"
+if [[ "$OLLAMA_VERSION" == "latest" || -z "$OLLAMA_VERSION" ]]; then
+  bold "1/6  Installing Ollama (tracking latest)"
 else
-  brew install ollama
+  bold "1/6  Installing Ollama (pinned to $OLLAMA_VERSION)"
+fi
+
+# Detect what's installed: regular `ollama` formula, or any `ollama@X.Y.Z`
+# left over from a previous pinned run.
+CURRENT_OLLAMA_FORMULA=""
+CURRENT_OLLAMA_VERSION=""
+while read -r _f; do
+  [[ "$_f" =~ ^ollama(@.*)?$ ]] || continue
+  CURRENT_OLLAMA_FORMULA="$_f"
+  CURRENT_OLLAMA_VERSION="$(brew list --versions "$_f" 2>/dev/null | awk 'NR==1{print $2}')"
+  break
+done < <(brew list --formula 2>/dev/null || true)
+
+if [[ "$OLLAMA_VERSION" == "latest" || -z "$OLLAMA_VERSION" ]]; then
+  # Track-latest mode. Drop any pinned ollama@X.Y.Z and unpin the regular
+  # formula so the weekly `brew upgrade` can move it forward.
+  if [[ -n "$CURRENT_OLLAMA_FORMULA" && "$CURRENT_OLLAMA_FORMULA" != "ollama" ]]; then
+    info "removing pinned $CURRENT_OLLAMA_FORMULA in favor of latest ollama"
+    brew unpin "$CURRENT_OLLAMA_FORMULA" 2>/dev/null || true
+    brew uninstall "$CURRENT_OLLAMA_FORMULA"
+    CURRENT_OLLAMA_FORMULA=""
+  fi
+  brew unpin ollama 2>/dev/null || true
+  if [[ "$CURRENT_OLLAMA_FORMULA" == "ollama" ]]; then
+    info "ollama already installed at $CURRENT_OLLAMA_VERSION (tracking latest)"
+  else
+    brew install ollama
+  fi
+else
+  # Pinned mode. Install ollama@$OLLAMA_VERSION via a local tap, then pin.
+  # `brew upgrade` skips pinned formulas, so the weekly auto-upgrade is a
+  # no-op for ollama without any extra work.
+  DESIRED_FORMULA="ollama@${OLLAMA_VERSION}"
+  PIN_TAP="local/ollama-pin"
+
+  if [[ "$CURRENT_OLLAMA_FORMULA" == "$DESIRED_FORMULA" && "$CURRENT_OLLAMA_VERSION" == "$OLLAMA_VERSION" ]]; then
+    info "$DESIRED_FORMULA already installed at $CURRENT_OLLAMA_VERSION"
+  else
+    if [[ -n "$CURRENT_OLLAMA_FORMULA" ]]; then
+      info "replacing $CURRENT_OLLAMA_FORMULA ($CURRENT_OLLAMA_VERSION) with $DESIRED_FORMULA"
+      brew unpin "$CURRENT_OLLAMA_FORMULA" 2>/dev/null || true
+      brew uninstall "$CURRENT_OLLAMA_FORMULA"
+    fi
+
+    if ! brew tap | grep -qx "$PIN_TAP"; then
+      info "creating local tap $PIN_TAP for pinned ollama versions"
+      brew tap-new "$PIN_TAP" >/dev/null
+    fi
+    PIN_TAP_PATH="$(brew --repository "$PIN_TAP")"
+    if [[ ! -f "$PIN_TAP_PATH/Formula/${DESIRED_FORMULA}.rb" ]]; then
+      info "extracting ollama $OLLAMA_VERSION formula into $PIN_TAP"
+      brew extract --version="$OLLAMA_VERSION" ollama "$PIN_TAP" >/dev/null
+    fi
+
+    info "installing $PIN_TAP/$DESIRED_FORMULA"
+    brew install "$PIN_TAP/$DESIRED_FORMULA"
+  fi
+
+  brew pin "$DESIRED_FORMULA" 2>/dev/null || true
+  info "ollama pinned at $OLLAMA_VERSION"
 fi
 if [[ "$INSTALL_GUI" == "1" ]]; then
   if brew list --cask ollama-app >/dev/null 2>&1; then
@@ -67,6 +127,24 @@ if brew list --cask tailscale-app >/dev/null 2>&1; then
   info "already installed"
 else
   brew install --cask tailscale-app
+fi
+
+# The cask only ships the CLI inside the app bundle, so `tailscale` isn't on
+# PATH by default. Symlink it into $(brew --prefix)/bin so it works from any
+# shell. Idempotent; refuses to clobber an unrelated file at the target.
+TS_APP_BIN="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+TS_LINK="$(brew --prefix)/bin/tailscale"
+if [[ -x "$TS_APP_BIN" ]]; then
+  if [[ -L "$TS_LINK" && "$(readlink "$TS_LINK")" == "$TS_APP_BIN" ]]; then
+    info "tailscale CLI already on PATH at $TS_LINK"
+  elif [[ -e "$TS_LINK" || -L "$TS_LINK" ]]; then
+    info "WARNING: $TS_LINK exists and isn't our symlink — leaving alone"
+  else
+    ln -s "$TS_APP_BIN" "$TS_LINK"
+    info "symlinked tailscale CLI to $TS_LINK"
+  fi
+else
+  info "WARNING: $TS_APP_BIN missing — can't symlink CLI onto PATH"
 fi
 
 bold "3/6  Configuring Ollama (bind=$OLLAMA_BIND keep_alive=$OLLAMA_KEEP_ALIVE_VAL max_loaded=$OLLAMA_MAX_LOADED)"
@@ -211,6 +289,12 @@ if [[ "$AWAKE_ON_AC" == "1" ]]; then
     womp 1 \
     powernap 0
   info "pmset: never sleep, lid-close safe, auto-restart on power loss, wake on network"
+else
+  bold "Bonus: restoring stock pmset AC profile (AWAKE_ON_AC=0)"
+  # Undoes any previous AWAKE_ON_AC=1 run. restoredefaults resets the AC
+  # profile to Apple's defaults; safe even if we never customized it.
+  sudo pmset -c restoredefaults
+  info "pmset: AC profile restored to stock"
 fi
 
 if [[ "$LOCK_ON_SLEEP" == "1" ]]; then
@@ -218,6 +302,12 @@ if [[ "$LOCK_ON_SLEEP" == "1" ]]; then
   defaults write com.apple.screensaver askForPassword -int 1
   defaults write com.apple.screensaver askForPasswordDelay -int 0
   info "screen will lock immediately on display sleep"
+else
+  bold "Bonus: removing screen-lock override (LOCK_ON_SLEEP=0)"
+  # Restore Apple's defaults by deleting the keys this script wrote.
+  defaults delete com.apple.screensaver askForPassword 2>/dev/null || true
+  defaults delete com.apple.screensaver askForPasswordDelay 2>/dev/null || true
+  info "askForPassword / askForPasswordDelay reset to system defaults"
 fi
 
 if [[ "$EXCLUDE_BACKUPS" == "1" ]]; then
@@ -228,6 +318,15 @@ if [[ "$EXCLUDE_BACKUPS" == "1" ]]; then
   # Drop the well-known sentinel file Spotlight respects to skip indexing
   touch "$HOME/.ollama/models/.metadata_never_index"
   info "Time Machine: ~/.ollama/models excluded; Spotlight: .metadata_never_index in place"
+else
+  bold "Bonus: removing ~/.ollama/models backup/index exclusions (EXCLUDE_BACKUPS=0)"
+  if [[ -d "$HOME/.ollama/models" ]]; then
+    tmutil removeexclusion "$HOME/.ollama/models" 2>/dev/null || true
+    rm -f "$HOME/.ollama/models/.metadata_never_index"
+    info "Time Machine exclusion removed; Spotlight sentinel deleted"
+  else
+    info "~/.ollama/models doesn't exist — nothing to undo"
+  fi
 fi
 
 if [[ "$INSTALL_HEALTHCHECK" == "1" ]]; then
@@ -269,6 +368,17 @@ HC
     launchctl unload "$HC_PATH" 2>/dev/null || true
     launchctl load "$HC_PATH"
     info "installed ${HC_LABEL} (log: ${HC_LOG})"
+  fi
+else
+  bold "Bonus: removing ollama health check (INSTALL_HEALTHCHECK=0)"
+  HC_LABEL="com.user.ollama-healthcheck"
+  HC_PATH="$HOME/Library/LaunchAgents/${HC_LABEL}.plist"
+  if [[ -f "$HC_PATH" ]]; then
+    launchctl unload "$HC_PATH" 2>/dev/null || true
+    rm -f "$HC_PATH"
+    info "${HC_LABEL} unloaded and removed"
+  else
+    info "${HC_LABEL} not installed — nothing to remove"
   fi
 fi
 
@@ -327,6 +437,27 @@ BU
     launchctl load "$BU_PATH"
     info "installed ${BU_LABEL} (Sundays 04:00, log: ${BU_LOG})"
   fi
+else
+  bold "Bonus: disabling macOS auto-updates + weekly brew upgrade (INSTALL_AUTOUPDATE=0)"
+
+  # Undo the softwareupdate prefs this script wrote. Deleting restores
+  # Apple's defaults rather than pinning to false.
+  sudo softwareupdate --schedule off >/dev/null 2>&1 || true
+  sudo defaults delete /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled 2>/dev/null || true
+  sudo defaults delete /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload 2>/dev/null || true
+  sudo defaults delete /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall 2>/dev/null || true
+  info "softwareupdate: schedule off, prefs reset to defaults"
+
+  # Unload + delete the weekly brew upgrade LaunchAgent if present.
+  BU_LABEL="com.user.brew-weekly-upgrade"
+  BU_PATH="$HOME/Library/LaunchAgents/${BU_LABEL}.plist"
+  if [[ -f "$BU_PATH" ]]; then
+    launchctl unload "$BU_PATH" 2>/dev/null || true
+    rm -f "$BU_PATH"
+    info "${BU_LABEL} unloaded and removed"
+  else
+    info "${BU_LABEL} not installed — nothing to remove"
+  fi
 fi
 
 bold "Done."
@@ -345,5 +476,5 @@ Logs:
   weekly brew upgrade:        ~/Library/Logs/com.user.brew-weekly-upgrade.log
 
 Your Tailscale IPv4 (once signed in):
-  /Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4
+  tailscale ip -4
 EOF

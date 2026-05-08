@@ -10,16 +10,27 @@ auto-restarts after power loss, locks the screen when the display blanks.
 bash setup-ollama-tailscale.sh
 ```
 
-Re-runnable; each step is idempotent and skips work that's already done.
-See the script header for env-var overrides (`DEFAULT_MODEL`, `INSTALL_GUI`,
+Re-runnable: the script enforces a known good state in **both directions**.
+Running it on a clean Mac sets everything up; running it again confirms
+each piece is in place; flipping a flag from `1` to `0` and re-running
+actively undoes what that flag had previously applied (uninstalls the
+GUI cask, restores stock `pmset`, removes LaunchAgents, etc.).
+
+See the script header for env-var overrides (`OLLAMA_VERSION`, `INSTALL_GUI`,
 `AWAKE_ON_AC`, `DISPLAY_SLEEP_MIN`, `LOCK_ON_SLEEP`, `EXCLUDE_BACKUPS`,
 `INSTALL_HEALTHCHECK`, `INSTALL_AUTOUPDATE`, etc.).
+
+`OLLAMA_VERSION` pins to an exact ollama release (default in the script
+header). On every run the script enforces that version — upgrading or
+downgrading via a local brew tap as needed — and `brew pin`s the result so
+the weekly auto-upgrade can't drift it. Set `OLLAMA_VERSION=latest` (or
+empty) to track upstream instead.
 
 ## Logs
 
 | What                  | Path                                                |
 | --------------------- | --------------------------------------------------- |
-| Ollama (brew stdout)  | `$(brew --prefix)/var/log/ollama.log`               |
+| Ollama (server)       | `~/Library/Logs/ollama.log`                         |
 | Ollama (application)  | `~/.ollama/logs/server.log`                         |
 | Health check          | `~/Library/Logs/com.user.ollama-healthcheck.log`    |
 | Weekly brew upgrade   | `~/Library/Logs/com.user.brew-weekly-upgrade.log`   |
@@ -27,19 +38,25 @@ See the script header for env-var overrides (`DEFAULT_MODEL`, `INSTALL_GUI`,
 ## Common operations
 
 ```bash
-brew services restart ollama                    # restart the daemon
-curl http://127.0.0.1:11434/api/tags            # list installed models
-curl http://127.0.0.1:11434/api/ps              # show what's loaded
-ollama run gemma:best                           # interactive chat with the alias
-launchctl list | grep -E 'ollama|brew-weekly'   # see installed agents
+launchctl kickstart -k gui/$(id -u)/com.user.ollama   # restart the daemon
+curl http://127.0.0.1:11434/api/tags                  # list installed models
+curl http://127.0.0.1:11434/api/ps                    # show what's loaded
+ollama run gemma:best                                 # interactive chat with the alias
+launchctl list | grep -E 'ollama|brew-weekly'         # see installed agents
 ```
 
 ## What gets installed
 
-- Homebrew formulas/casks: `ollama`, `ollama-app`, `tailscale-app`
+- Homebrew formulas/casks: `ollama` (formula), `tailscale-app` (cask).
+  `ollama-app` (cask) is installed only when `INSTALL_GUI=1`; with the
+  default `INSTALL_GUI=0` the cask is actively uninstalled if found.
+- A symlink at `$(brew --prefix)/bin/tailscale` pointing at the CLI inside
+  the Tailscale.app bundle, so `tailscale` works from any shell.
 - LaunchAgents in `~/Library/LaunchAgents/`:
-  - `com.user.ollama-env.plist` — re-applies `OLLAMA_HOST`, `OLLAMA_KEEP_ALIVE`,
-    `OLLAMA_MAX_LOADED_MODELS` at every login and kickstarts the brew service.
+  - `com.user.ollama.plist` — runs `ollama serve` directly with
+    `OLLAMA_HOST`, `OLLAMA_KEEP_ALIVE`, `OLLAMA_MAX_LOADED_MODELS` baked
+    into `EnvironmentVariables`. Replaces both `homebrew.mxcl.ollama`
+    and the legacy `com.user.ollama-env` agent (both are torn down on run).
   - `com.user.ollama-healthcheck.plist` — probes `/api/tags` every 60s and
     runs `launchctl kickstart -k` if it stops responding.
   - `com.user.brew-weekly-upgrade.plist` — Sunday 04:00 `brew update && brew upgrade ollama`.
