@@ -89,6 +89,11 @@ else
     PIN_TAP_PATH="$(brew --repository "$PIN_TAP")"
     if [[ ! -f "$PIN_TAP_PATH/Formula/${DESIRED_FORMULA}.rb" ]]; then
       info "extracting ollama $OLLAMA_VERSION formula into $PIN_TAP"
+      # brew extract requires the full homebrew/core tap (not just the API).
+      if ! brew tap | grep -qx "homebrew/core"; then
+        info "tapping homebrew/core (required for brew extract)"
+        brew tap --force homebrew/core >/dev/null
+      fi
       brew extract --version="$OLLAMA_VERSION" ollama "$PIN_TAP" >/dev/null
     fi
 
