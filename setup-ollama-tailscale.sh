@@ -69,6 +69,24 @@ else
   brew install --cask tailscale-app
 fi
 
+# The cask only ships the CLI inside the app bundle, so `tailscale` isn't on
+# PATH by default. Symlink it into $(brew --prefix)/bin so it works from any
+# shell. Idempotent; refuses to clobber an unrelated file at the target.
+TS_APP_BIN="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+TS_LINK="$(brew --prefix)/bin/tailscale"
+if [[ -x "$TS_APP_BIN" ]]; then
+  if [[ -L "$TS_LINK" && "$(readlink "$TS_LINK")" == "$TS_APP_BIN" ]]; then
+    info "tailscale CLI already on PATH at $TS_LINK"
+  elif [[ -e "$TS_LINK" || -L "$TS_LINK" ]]; then
+    info "WARNING: $TS_LINK exists and isn't our symlink — leaving alone"
+  else
+    ln -s "$TS_APP_BIN" "$TS_LINK"
+    info "symlinked tailscale CLI to $TS_LINK"
+  fi
+else
+  info "WARNING: $TS_APP_BIN missing — can't symlink CLI onto PATH"
+fi
+
 bold "3/6  Configuring Ollama (bind=$OLLAMA_BIND keep_alive=$OLLAMA_KEEP_ALIVE_VAL max_loaded=$OLLAMA_MAX_LOADED)"
 
 OLLAMA_BIN="$(brew --prefix)/bin/ollama"
@@ -398,5 +416,5 @@ Logs:
   weekly brew upgrade:        ~/Library/Logs/com.user.brew-weekly-upgrade.log
 
 Your Tailscale IPv4 (once signed in):
-  /Applications/Tailscale.app/Contents/MacOS/Tailscale ip -4
+  tailscale ip -4
 EOF

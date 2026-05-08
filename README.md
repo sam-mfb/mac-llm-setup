@@ -44,6 +44,8 @@ launchctl list | grep -E 'ollama|brew-weekly'         # see installed agents
 - Homebrew formulas/casks: `ollama` (formula), `tailscale-app` (cask).
   `ollama-app` (cask) is installed only when `INSTALL_GUI=1`; with the
   default `INSTALL_GUI=0` the cask is actively uninstalled if found.
+- A symlink at `$(brew --prefix)/bin/tailscale` pointing at the CLI inside
+  the Tailscale.app bundle, so `tailscale` works from any shell.
 - LaunchAgents in `~/Library/LaunchAgents/`:
   - `com.user.ollama.plist` — runs `ollama serve` directly with
     `OLLAMA_HOST`, `OLLAMA_KEEP_ALIVE`, `OLLAMA_MAX_LOADED_MODELS` baked
