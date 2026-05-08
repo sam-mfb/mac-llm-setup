@@ -14,6 +14,7 @@ set -euo pipefail
 OLLAMA_BIND="${OLLAMA_BIND:-0.0.0.0:11434}"            # listens on all interfaces (Tailscale + LAN + localhost)
 OLLAMA_KEEP_ALIVE_VAL="${OLLAMA_KEEP_ALIVE_VAL:--1}"   # -1 = pin loaded model in memory forever
 OLLAMA_MAX_LOADED="${OLLAMA_MAX_LOADED:-1}"            # 1 = only one model resident at a time
+OLLAMA_VERSION="${OLLAMA_VERSION:-0.6.0}"              # exact ollama version to pin to. Set to "latest" (or "") to track upstream instead.
 # Models to pull (space-separated; idempotent). Set to "" to skip all pulls.
 PULL_MODELS="${PULL_MODELS:-gemma4:31b-it-q8_0 gemma4:31b-mlx-bf16 gemma4:31b-it-q4_K_M gemma4:26b-mlx-bf16 gemma4:26b-a4b-it-q8_0 gemma4:26b-a4b-it-q4_K_M}"
 AWAKE_ON_AC="${AWAKE_ON_AC:-1}"               # 1 = on AC, never sleep (incl. lid closed); 0 = restore stock pmset; both need sudo
@@ -33,11 +34,70 @@ if ! command -v brew >/dev/null 2>&1; then
   exit 1
 fi
 
-bold "1/6  Installing Ollama"
-if brew list --formula ollama >/dev/null 2>&1; then
-  info "formula (CLI/server) already installed"
+if [[ "$OLLAMA_VERSION" == "latest" || -z "$OLLAMA_VERSION" ]]; then
+  bold "1/6  Installing Ollama (tracking latest)"
 else
-  brew install ollama
+  bold "1/6  Installing Ollama (pinned to $OLLAMA_VERSION)"
+fi
+
+# Detect what's installed: regular `ollama` formula, or any `ollama@X.Y.Z`
+# left over from a previous pinned run.
+CURRENT_OLLAMA_FORMULA=""
+CURRENT_OLLAMA_VERSION=""
+while read -r _f; do
+  [[ "$_f" =~ ^ollama(@.*)?$ ]] || continue
+  CURRENT_OLLAMA_FORMULA="$_f"
+  CURRENT_OLLAMA_VERSION="$(brew list --versions "$_f" 2>/dev/null | awk 'NR==1{print $2}')"
+  break
+done < <(brew list --formula 2>/dev/null || true)
+
+if [[ "$OLLAMA_VERSION" == "latest" || -z "$OLLAMA_VERSION" ]]; then
+  # Track-latest mode. Drop any pinned ollama@X.Y.Z and unpin the regular
+  # formula so the weekly `brew upgrade` can move it forward.
+  if [[ -n "$CURRENT_OLLAMA_FORMULA" && "$CURRENT_OLLAMA_FORMULA" != "ollama" ]]; then
+    info "removing pinned $CURRENT_OLLAMA_FORMULA in favor of latest ollama"
+    brew unpin "$CURRENT_OLLAMA_FORMULA" 2>/dev/null || true
+    brew uninstall "$CURRENT_OLLAMA_FORMULA"
+    CURRENT_OLLAMA_FORMULA=""
+  fi
+  brew unpin ollama 2>/dev/null || true
+  if [[ "$CURRENT_OLLAMA_FORMULA" == "ollama" ]]; then
+    info "ollama already installed at $CURRENT_OLLAMA_VERSION (tracking latest)"
+  else
+    brew install ollama
+  fi
+else
+  # Pinned mode. Install ollama@$OLLAMA_VERSION via a local tap, then pin.
+  # `brew upgrade` skips pinned formulas, so the weekly auto-upgrade is a
+  # no-op for ollama without any extra work.
+  DESIRED_FORMULA="ollama@${OLLAMA_VERSION}"
+  PIN_TAP="local/ollama-pin"
+
+  if [[ "$CURRENT_OLLAMA_FORMULA" == "$DESIRED_FORMULA" && "$CURRENT_OLLAMA_VERSION" == "$OLLAMA_VERSION" ]]; then
+    info "$DESIRED_FORMULA already installed at $CURRENT_OLLAMA_VERSION"
+  else
+    if [[ -n "$CURRENT_OLLAMA_FORMULA" ]]; then
+      info "replacing $CURRENT_OLLAMA_FORMULA ($CURRENT_OLLAMA_VERSION) with $DESIRED_FORMULA"
+      brew unpin "$CURRENT_OLLAMA_FORMULA" 2>/dev/null || true
+      brew uninstall "$CURRENT_OLLAMA_FORMULA"
+    fi
+
+    if ! brew tap | grep -qx "$PIN_TAP"; then
+      info "creating local tap $PIN_TAP for pinned ollama versions"
+      brew tap-new "$PIN_TAP" >/dev/null
+    fi
+    PIN_TAP_PATH="$(brew --repository "$PIN_TAP")"
+    if [[ ! -f "$PIN_TAP_PATH/Formula/${DESIRED_FORMULA}.rb" ]]; then
+      info "extracting ollama $OLLAMA_VERSION formula into $PIN_TAP"
+      brew extract --version="$OLLAMA_VERSION" ollama "$PIN_TAP" >/dev/null
+    fi
+
+    info "installing $PIN_TAP/$DESIRED_FORMULA"
+    brew install "$PIN_TAP/$DESIRED_FORMULA"
+  fi
+
+  brew pin "$DESIRED_FORMULA" 2>/dev/null || true
+  info "ollama pinned at $OLLAMA_VERSION"
 fi
 if [[ "$INSTALL_GUI" == "1" ]]; then
   if brew list --cask ollama-app >/dev/null 2>&1; then

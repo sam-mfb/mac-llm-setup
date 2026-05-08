@@ -16,9 +16,15 @@ each piece is in place; flipping a flag from `1` to `0` and re-running
 actively undoes what that flag had previously applied (uninstalls the
 GUI cask, restores stock `pmset`, removes LaunchAgents, etc.).
 
-See the script header for env-var overrides (`DEFAULT_MODEL`, `INSTALL_GUI`,
+See the script header for env-var overrides (`OLLAMA_VERSION`, `INSTALL_GUI`,
 `AWAKE_ON_AC`, `DISPLAY_SLEEP_MIN`, `LOCK_ON_SLEEP`, `EXCLUDE_BACKUPS`,
 `INSTALL_HEALTHCHECK`, `INSTALL_AUTOUPDATE`, etc.).
+
+`OLLAMA_VERSION` pins to an exact ollama release (default in the script
+header). On every run the script enforces that version — upgrading or
+downgrading via a local brew tap as needed — and `brew pin`s the result so
+the weekly auto-upgrade can't drift it. Set `OLLAMA_VERSION=latest` (or
+empty) to track upstream instead.
 
 ## Logs
 
